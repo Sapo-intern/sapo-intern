@@ -1,5 +1,6 @@
 package sapo.intern.mock.carstore.ticket.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,5 +26,17 @@ public class Vehicle {
     private String brand;
     private String color;
     @OneToOne(mappedBy = "vehicle")
+    @JsonIgnore
     private Ticket ticket;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    @JsonIgnore
+    private Customer customer;
+
+    public void setVehicle(Vehicle vehicle) {
+        this.plateNumber = vehicle.plateNumber;
+        this.brand = vehicle.brand;
+        this.name = vehicle.name;
+        this.color = vehicle.color;
+    }
 }
