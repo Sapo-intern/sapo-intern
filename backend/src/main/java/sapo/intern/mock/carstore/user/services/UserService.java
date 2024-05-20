@@ -42,5 +42,47 @@ public class UserService {
         emailService.sendEmail(request.getEmail(), "Thông tin đăng nhập", "Username: " + user.getUsername() + "\nPassword: " + tempPassword);
         return user;
     }
+
+    public void changePassword(String email, String oldPassword, String newPassword, String confirmNewPassword) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new AppException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        if (!newPassword.equals(confirmNewPassword)) {
+            throw new AppException(ErrorCode.PASSWORD_CONFIRMATION_FAILED);
+        }
+
+        if (!isValidPassword(newPassword)) {
+            throw new AppException(ErrorCode.WEAK_PASSWORD);
+        }
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+        user.setFirstLogin(false);
+        userRepo.save(user);
+    }
+
+    private boolean isValidPassword(String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+
+        boolean hasLower = false, hasUpper = false, hasDigit = false;
+        for (char c : password.toCharArray()) {
+            if (Character.isLowerCase(c)) {
+                hasLower = true;
+            } else if (Character.isUpperCase(c)) {
+                hasUpper = true;
+            } else if (Character.isDigit(c)) {
+                hasDigit = true;
+            }
+        }
+        return hasLower && hasUpper && hasDigit;
+    }
 }
 
