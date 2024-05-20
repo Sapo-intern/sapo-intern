@@ -2,7 +2,10 @@ package sapo.intern.mock.carstore.user.controllers;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import sapo.intern.mock.carstore.user.dto.request.ChangePasswordRequest;
 import sapo.intern.mock.carstore.user.dto.request.UserCreateRequest;
 import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
@@ -16,6 +19,7 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/register")
+
     ApiResponse<User> createUser(@RequestBody @Valid UserCreateRequest request){
         ApiResponse<User> apiResponse = new ApiResponse<>();
 
