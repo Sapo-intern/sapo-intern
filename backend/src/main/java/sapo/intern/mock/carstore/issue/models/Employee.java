@@ -30,6 +30,6 @@ public class Employee {
     private int age;
     @OneToOne(mappedBy = "employee")
     private Issue issue;
-    @OneToOne(mappedBy = "employee")
-    private User user;
+//    @OneToOne(mappedBy = "employee")
+//    private User user;
 }
