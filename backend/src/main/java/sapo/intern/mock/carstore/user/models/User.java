@@ -28,6 +28,7 @@ public class User {
     private String address;
     private Integer age;
     private String urlImage;
+    private boolean firstLogin;
 //    @OneToOne(cascade = CascadeType.ALL)
 //    @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
 //    private Employee employee;

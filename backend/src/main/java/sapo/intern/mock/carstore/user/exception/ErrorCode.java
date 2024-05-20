@@ -10,7 +10,11 @@ public enum ErrorCode {
     INVALID_KEY(1001, "Uncategorized error", HttpStatus.BAD_REQUEST),
     USER_EXISTED(1002, "Người dùng đã tồn tại", HttpStatus.BAD_REQUEST),
     EMAIL_INVALID(1003, "Không đúng định dạng email", HttpStatus.BAD_REQUEST),
-//    USERNAME_INVALID(1004, "Username must be at least 4 characters", HttpStatus.BAD_REQUEST),
+    USER_NOT_FOUND(1005, "Người dùng không tồn tại", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD(1006, "Mật khẩu cũ không đúng", HttpStatus.BAD_REQUEST),
+    PASSWORD_CONFIRMATION_FAILED(1007, "Mật khẩu mới không khớp", HttpStatus.BAD_REQUEST),
+    WEAK_PASSWORD(1008, "Mật khẩu phải có cả chữ hoa, chữ thường, số và phải lớn hơn 8 kí tự", HttpStatus.BAD_REQUEST),
+    USERNAME_INVALID(1004, "Username must be at least 4 characters", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;
