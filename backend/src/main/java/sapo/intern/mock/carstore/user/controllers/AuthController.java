@@ -1,22 +1,15 @@
 package sapo.intern.mock.carstore.user.controllers;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sapo.intern.mock.carstore.user.dto.request.ChangePasswordRequest;
 import sapo.intern.mock.carstore.user.dto.request.LoginRequest;
 import sapo.intern.mock.carstore.user.dto.request.UserCreateRequest;
-import sapo.intern.mock.carstore.user.dto.request.UserUpdateRequest;
 import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
 import sapo.intern.mock.carstore.user.dto.response.LoginResponse;
 import sapo.intern.mock.carstore.user.models.User;
 import sapo.intern.mock.carstore.user.services.AuthService;
-import sapo.intern.mock.carstore.user.services.UserService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping
@@ -45,6 +38,22 @@ public class AuthController {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         authService.changePassword(request.getEmail(), request.getOldPassword(), request.getNewPassword(), request.getConfirmNewPassword());
         apiResponse.setMessage("Password changed successfully");
+        return apiResponse;
+    }
+
+    @PostMapping("/forgot-password")
+    public ApiResponse<String> forgotPassword(@RequestParam String email) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        authService.forgotPassword(email);
+        apiResponse.setMessage("Password reset link has been sent to your email.");
+        return apiResponse;
+    }
+
+    @PostMapping("/reset-password")
+    public ApiResponse<String> resetPassword(@RequestParam String token, @RequestParam String newPassword, @RequestParam String confirmNewPassword) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        authService.resetPassword(token, newPassword, confirmNewPassword);
+        apiResponse.setMessage("Password has been reset successfully.");
         return apiResponse;
     }
 }

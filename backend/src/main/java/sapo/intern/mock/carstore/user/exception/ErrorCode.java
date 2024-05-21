@@ -17,6 +17,7 @@ public enum ErrorCode {
     USERNAME_INVALID(1004, "Username must be at least 4 characters", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1010, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     NO_DATA(1009, "Không có dữ liêu", HttpStatus.BAD_REQUEST),
+    INVALID_OR_EXPIRED_TOKEN(1010,"Token không hợp đúng", HttpStatus.BAD_REQUEST)
     ;
 
     private int code;
