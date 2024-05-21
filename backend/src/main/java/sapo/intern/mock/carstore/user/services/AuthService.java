@@ -117,6 +117,46 @@ public class AuthService {
         return hasLower && hasUpper && hasDigit;
     }
 
+    public void forgotPassword(String email) {
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        String token = UUID.randomUUID().toString();
+
+        user.setResetPasswordToken(token);
+        user.setResetPasswordTokenExpiry(Instant.now().plus(1, ChronoUnit.HOURS));
+        userRepo.save(user);
+
+        String resetLink = "http://localhost:8080/reset-password?token=" + token;
+
+        emailService.sendEmail(user.getEmail(), "Password Reset Request", "Click the link to reset your password: " + resetLink);
+    }
+
+    public void resetPassword(String token, String newPassword, String confirmNewPassword) {
+        User user = userRepo.findByResetPasswordToken(token);
+        if (user == null || user.getResetPasswordTokenExpiry().isBefore(Instant.now())) {
+            throw new AppException(ErrorCode.INVALID_OR_EXPIRED_TOKEN);
+        }
+
+        if (!newPassword.equals(confirmNewPassword)) {
+            throw new AppException(ErrorCode.PASSWORD_CONFIRMATION_FAILED);
+        }
+
+        if (!isValidPassword(newPassword)) {
+            throw new AppException(ErrorCode.WEAK_PASSWORD);
+        }
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+        user.setResetPasswordToken(null);
+        user.setResetPasswordTokenExpiry(null);
+        userRepo.save(user);
+    }
+
+
+
     private String generateToken(String username) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 

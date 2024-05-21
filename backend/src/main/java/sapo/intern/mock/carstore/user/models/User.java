@@ -6,6 +6,8 @@ import sapo.intern.mock.carstore.issue.models.Employee;
 import sapo.intern.mock.carstore.user.enums.UserRole;
 import sapo.intern.mock.carstore.user.repositories.UserRepo;
 
+import java.time.Instant;
+
 @Data
 @AllArgsConstructor
 @Setter
@@ -27,6 +29,9 @@ public class User {
     private Integer age;
     private String urlImage;
     private boolean firstLogin;
+    private String resetPasswordToken;
+    private Instant resetPasswordTokenExpiry;
+
 //    @OneToOne(cascade = CascadeType.ALL)
 //    @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
 //    private Employee employee;
