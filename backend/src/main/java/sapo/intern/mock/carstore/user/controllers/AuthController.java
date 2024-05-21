@@ -3,15 +3,15 @@ package sapo.intern.mock.carstore.user.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import sapo.intern.mock.carstore.user.dto.request.ChangePasswordRequest;
 import sapo.intern.mock.carstore.user.dto.request.LoginRequest;
 import sapo.intern.mock.carstore.user.dto.request.UserCreateRequest;
+import sapo.intern.mock.carstore.user.dto.request.UserUpdateRequest;
 import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
 import sapo.intern.mock.carstore.user.dto.response.LoginResponse;
+import sapo.intern.mock.carstore.user.dto.response.UserReponse;
 import sapo.intern.mock.carstore.user.models.User;
 import sapo.intern.mock.carstore.user.services.UserService;
 
@@ -30,6 +30,24 @@ public class AuthController {
         apiResponse.setResult(userService.createUser(request));
 
         return apiResponse;
+    }
+
+    @DeleteMapping("/{userId}")
+    ApiResponse<String> deleteUser(@PathVariable String userId){
+        userService.deleteUser(userId);
+        return ApiResponse.<String>builder()
+                .result("User has been deleted")
+                .build();
+    }
+
+    @PatchMapping("/{userId}")
+    public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable String userId, @Valid @RequestBody UserUpdateRequest request){
+        User user = userService.updateUser(userId, request);
+        ApiResponse<User> reponse = ApiResponse.<User>builder()
+                .message("Cập nhật dữ liệu thành công")
+                .result(user)
+                .build();
+        return ResponseEntity.ok(reponse);
     }
 
     @PostMapping("/log-in")
