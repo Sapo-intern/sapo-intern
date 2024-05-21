@@ -1,14 +1,12 @@
 package sapo.intern.mock.carstore.user.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import sapo.intern.mock.carstore.issue.models.Employee;
 import sapo.intern.mock.carstore.user.enums.UserRole;
 import sapo.intern.mock.carstore.user.repositories.UserRepo;
 
+@Data
 @AllArgsConstructor
 @Setter
 @Getter
