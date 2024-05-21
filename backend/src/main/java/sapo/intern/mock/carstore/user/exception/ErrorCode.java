@@ -15,6 +15,7 @@ public enum ErrorCode {
     PASSWORD_CONFIRMATION_FAILED(1007, "Mật khẩu mới không khớp", HttpStatus.BAD_REQUEST),
     WEAK_PASSWORD(1008, "Mật khẩu phải có cả chữ hoa, chữ thường, số và phải lớn hơn 8 kí tự", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(1004, "Username must be at least 4 characters", HttpStatus.BAD_REQUEST),
+    UNAUTHENTICATED(1010, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     ;
 
     private int code;
