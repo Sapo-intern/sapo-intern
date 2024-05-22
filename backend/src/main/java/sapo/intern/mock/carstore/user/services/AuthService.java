@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import sapo.intern.mock.carstore.user.dto.request.LoginRequest;
 import sapo.intern.mock.carstore.user.dto.request.UserCreateRequest;
 import sapo.intern.mock.carstore.user.dto.response.LoginResponse;
+import sapo.intern.mock.carstore.user.enums.UserRole;
 import sapo.intern.mock.carstore.user.exception.AppException;
 import sapo.intern.mock.carstore.user.exception.ErrorCode;
 import sapo.intern.mock.carstore.user.models.User;
@@ -40,27 +41,41 @@ public class AuthService {
         String tempPassword = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
         String encodedPassword = passwordEncoder.encode(tempPassword);
 
-        User existingUser = userRepo.findByEmail(request.getEmail());
-        if (existingUser != null) {
+        User existingUserByUsername = userRepo.findByUsername(request.getUsername());
+        if (existingUserByUsername != null) {
             throw new AppException(ErrorCode.USER_EXISTED);
+        }
+
+        User existingUserByEmail = userRepo.findByEmail(request.getEmail());
+        if (existingUserByEmail != null) {
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
 
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(encodedPassword);
+        user.setFirstLogin(true);
+//        EnumSet<UserRole> roles = EnumSet.of(UserRole.TECHNICIAN);
+//        UserRole role = roles.iterator().next();
+//        user.setRole(role);
+
+        UserRole role = request.getRole() != null ? request.getRole() : UserRole.TECHNICIAN;
+        user.setRole(role);
 
         userRepo.save(user);
 
-        emailService.sendEmail(request.getEmail(), "Thông tin đăng nhập", "Username: " + user.getUsername() + "\nPassword: " + tempPassword);
+        emailService.sendEmail(request.getEmail(), "Thông tin đăng nhập", "Chào mừng bạn đến với công ty của chúng tôi và dưới đây là thông tin đăng nhập vào hệ thống của công ty" + "\nUsername: " + user.getUsername() + "\nPassword: " + tempPassword);
         return user;
     }
 
     public LoginResponse loginUser(LoginRequest request){
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
-        var user = userRepo.findByUsername(request.getUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        var user = userRepo.findByUsername(request.getUsername());
+        if (user == null) {
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+        }
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(),
                 user.getPassword());
@@ -71,7 +86,16 @@ public class AuthService {
         var token = generateToken(request.getUsername());
         return LoginResponse.builder()
                 .token(token)
-                .authenticated(true)
+                .id(user.getId())
+                .username(user.getUsername())
+                .name(user.getName())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .address(user.getAddress())
+                .age(user.getAge())
+                .urlImage(user.getUrlImage())
+                .firstLogin(user.isFirstLogin())
+                .role(user.getRole())
                 .build();
     }
 
@@ -117,7 +141,7 @@ public class AuthService {
         return hasLower && hasUpper && hasDigit;
     }
 
-    public void forgotPassword(String email) {
+    public String forgotPassword(String email) {
         User user = userRepo.findByEmail(email);
         if (user == null) {
             throw new AppException(ErrorCode.USER_NOT_FOUND);
@@ -131,7 +155,8 @@ public class AuthService {
 
         String resetLink = "http://localhost:8080/reset-password?token=" + token;
 
-        emailService.sendEmail(user.getEmail(), "Password Reset Request", "Click the link to reset your password: " + resetLink);
+        emailService.sendEmail(user.getEmail(), "Đặt lại mật khẩu", "Bấm vào link này để có thể đặt lại mật khẩu của bạn: " + resetLink + "\n\nVui lòng đặt lại mật khẩu luôn link này có hiệu lực trong vòng 1 tiếng");
+        return token;
     }
 
     public void resetPassword(String token, String newPassword, String confirmNewPassword) {
@@ -154,8 +179,6 @@ public class AuthService {
         user.setResetPasswordTokenExpiry(null);
         userRepo.save(user);
     }
-
-
 
     private String generateToken(String username) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);

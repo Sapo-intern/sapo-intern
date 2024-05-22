@@ -35,13 +35,15 @@ public class UserService {
         userRepo.deleteById(userId);
     }
 
-    public User updateUser(String userId, UserUpdateRequest request){
+    public User updateUser(String userId, UserUpdateRequest request) {
         User user = getUser(userId);
 
+        user.setUsername(request.getUsername());
         user.setName(request.getName());
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
         user.setAge(request.getAge());
+//        user.setUrlImage(request.getUrlImage());
 
         return userRepo.save(user);
     }

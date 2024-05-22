@@ -25,7 +25,7 @@ public class AuthController {
         return apiResponse;
     }
 
-    @PostMapping("/log-in")
+    @PostMapping("/login")
     ApiResponse<LoginResponse> authenticate(@RequestBody LoginRequest request){
         var result = authService.loginUser(request);
         return ApiResponse.<LoginResponse>builder()
@@ -37,15 +37,16 @@ public class AuthController {
     public ApiResponse<String> changePassword(@RequestBody ChangePasswordRequest request) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         authService.changePassword(request.getEmail(), request.getOldPassword(), request.getNewPassword(), request.getConfirmNewPassword());
-        apiResponse.setMessage("Password changed successfully");
+        apiResponse.setMessage("Thay đổi mật khẩu thành công");
         return apiResponse;
     }
 
     @PostMapping("/forgot-password")
     public ApiResponse<String> forgotPassword(@RequestParam String email) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
-        authService.forgotPassword(email);
-        apiResponse.setMessage("Password reset link has been sent to your email.");
+        String token = authService.forgotPassword(email);
+        apiResponse.setResult(token);
+        apiResponse.setMessage("Link đặt lại mật khẩu đã được gửi tới gmail của bạn");
         return apiResponse;
     }
 
@@ -53,7 +54,7 @@ public class AuthController {
     public ApiResponse<String> resetPassword(@RequestParam String token, @RequestParam String newPassword, @RequestParam String confirmNewPassword) {
         ApiResponse<String> apiResponse = new ApiResponse<>();
         authService.resetPassword(token, newPassword, confirmNewPassword);
-        apiResponse.setMessage("Password has been reset successfully.");
+        apiResponse.setMessage("Mật khẩu đã được đặt lại thành công.");
         return apiResponse;
     }
 }
