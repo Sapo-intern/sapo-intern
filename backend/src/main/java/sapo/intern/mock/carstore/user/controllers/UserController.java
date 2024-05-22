@@ -1,7 +1,6 @@
 package sapo.intern.mock.carstore.user.controllers;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +59,7 @@ public class UserController {
     ApiResponse<String> deleteUser(@PathVariable String userId){
         userService.deleteUser(userId);
         return ApiResponse.<String>builder()
-                .result("User has been deleted")
+                .result("Bạn đã xóa thành công")
                 .build();
     }
 }
