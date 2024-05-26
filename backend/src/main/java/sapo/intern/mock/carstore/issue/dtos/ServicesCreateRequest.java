@@ -1,5 +1,6 @@
 package sapo.intern.mock.carstore.issue.dtos;
 
+
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -14,10 +15,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductUpdateRequest {
-    @NotNull(message = "Mã sản phẩm không được rỗng")
-    @Size(min = 1, max = 50, message = "Mã sản phẩm phải có từ 1 đến 50 ký tự")
-    String productCode;
+public class ServicesCreateRequest {
+    @NotNull(message = "Mã dịch vụ  không được rỗng")
+    @Size(min = 1, max = 50, message = "Mã dịch vụ phải có từ 1 đến 50 ký tự")
+    String servicesCode;
 
     @NotNull(message = "Tên không được rỗng")
     @Size(min = 1, max = 100, message = "Tên phải có từ 1 đến 100 ký tự")
