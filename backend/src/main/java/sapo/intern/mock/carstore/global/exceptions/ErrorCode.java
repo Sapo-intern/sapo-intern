@@ -21,6 +21,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(1011, "Bạn chưa đăng nhập", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1012, "Bạn không có quyền", HttpStatus.FORBIDDEN),
     PRODUCT_EXISTED(1013, "Sản phẩm đã có", HttpStatus.BAD_REQUEST),
+    SERVICES_EXISTED(1013, "Dịch vụ đã có", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;
