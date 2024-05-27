@@ -8,6 +8,8 @@ import lombok.Setter;
 import sapo.intern.mock.carstore.issue.enums.PayMethod;
 import sapo.intern.mock.carstore.ticket.enums.TransactionStatus;
 
+import java.util.Date;
+
 @Table(name = "transactions")
 @AllArgsConstructor
 @Setter
@@ -24,4 +26,5 @@ public class Transaction {
     private int amount;
     @Enumerated(EnumType.ORDINAL)
     private TransactionStatus status;
+    private Date createdDate;
 }

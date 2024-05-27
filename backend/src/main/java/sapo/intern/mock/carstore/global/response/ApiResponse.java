@@ -1,4 +1,4 @@
-package sapo.intern.mock.carstore.global.dtos;
+package sapo.intern.mock.carstore.global.response;
 
 import lombok.Builder;
 import lombok.Getter;

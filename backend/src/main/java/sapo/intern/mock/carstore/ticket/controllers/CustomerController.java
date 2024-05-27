@@ -3,7 +3,7 @@ package sapo.intern.mock.carstore.ticket.controllers;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sapo.intern.mock.carstore.global.dtos.ApiResponse;
+import sapo.intern.mock.carstore.global.response.ApiResponse;
 import sapo.intern.mock.carstore.global.exceptions.NotFoundException;
 import sapo.intern.mock.carstore.ticket.dtos.CreateCustomerRequest;
 import sapo.intern.mock.carstore.ticket.dtos.CreateVehicleRequest;

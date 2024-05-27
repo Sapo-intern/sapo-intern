@@ -6,13 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import sapo.intern.mock.carstore.issue.dtos.ProductCreateRequest;
-import sapo.intern.mock.carstore.issue.dtos.ProductUpdateRequest;
 import sapo.intern.mock.carstore.issue.dtos.ServicesCreateRequest;
 import sapo.intern.mock.carstore.issue.dtos.ServicesUpdateRequest;
-import sapo.intern.mock.carstore.issue.models.Products;
 import sapo.intern.mock.carstore.issue.models.ServiceModal;
-import sapo.intern.mock.carstore.issue.services.ProductServices;
 import sapo.intern.mock.carstore.issue.services.Services;
 import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
 

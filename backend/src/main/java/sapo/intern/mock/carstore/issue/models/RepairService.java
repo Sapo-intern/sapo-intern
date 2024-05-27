@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Table(name = "services")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +21,6 @@ public class RepairService {
     private String description;
     private int price;
     private int totalCost;
-    @OneToMany(mappedBy = "repairService")
-    private List<ServicePart> serviceParts;
+    @OneToOne
+    private Issue issue;
 }

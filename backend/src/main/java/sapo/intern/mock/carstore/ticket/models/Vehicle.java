@@ -25,9 +25,6 @@ public class Vehicle {
     private String name;
     private String brand;
     private String color;
-    @OneToOne(mappedBy = "vehicle")
-    @JsonIgnore
-    private Ticket ticket;
     @ManyToOne
     @JoinColumn(name = "customer_id")
     @JsonIgnore
