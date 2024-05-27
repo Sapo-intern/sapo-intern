@@ -1,2 +1,6 @@
-package sapo.intern.mock.carstore.issue.enums;public class StorageType {
+package sapo.intern.mock.carstore.issue.enums;
+
+public enum StorageType {
+    IMPORT,
+    SALE
 }

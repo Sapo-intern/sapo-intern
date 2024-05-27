@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import sapo.intern.mock.carstore.issue.models.Product;
 
 @Repository
-public interface RepairPartRepo extends JpaRepository<Product, Long> {
+public interface ProductRepo extends JpaRepository<Product, Long> {
 }

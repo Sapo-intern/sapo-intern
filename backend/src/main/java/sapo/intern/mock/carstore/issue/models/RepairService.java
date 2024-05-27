@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Service {
+public class RepairService {
     @Id
     @Column(name = "service_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +21,6 @@ public class Service {
     private String description;
     private int price;
     private int totalCost;
+    @OneToOne
+    private Issue issue;
 }
