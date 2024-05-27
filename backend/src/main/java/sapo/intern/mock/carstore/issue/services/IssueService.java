@@ -4,14 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sapo.intern.mock.carstore.global.exceptions.NotFoundException;
-import sapo.intern.mock.carstore.issue.models.Issue;
-import sapo.intern.mock.carstore.issue.models.IssueProduct;
-import sapo.intern.mock.carstore.issue.models.Product;
-import sapo.intern.mock.carstore.issue.models.RepairService;
-import sapo.intern.mock.carstore.issue.repositories.IssueProductRepo;
-import sapo.intern.mock.carstore.issue.repositories.IssueRepo;
-import sapo.intern.mock.carstore.issue.repositories.ProductRepo;
-import sapo.intern.mock.carstore.issue.repositories.RepairServiceRepo;
+import sapo.intern.mock.carstore.issue.models.*;
+import sapo.intern.mock.carstore.issue.repositories.*;
 
 import java.util.List;
 
@@ -22,6 +16,7 @@ public class IssueService {
     private ProductRepo productRepo;
     private RepairServiceRepo serviceRepo;
     private IssueProductRepo issueProductRepo;
+    private EmployeeRepo employeeRepo;
     @Transactional
     public void deleteProduct(Long issueId, Long productId) {
         Issue foundIssue = issueRepo.findById(issueId).orElseThrow(() -> new NotFoundException("Không tồn tại " + issueId));
@@ -92,6 +87,18 @@ public class IssueService {
     }
 
     public Issue assignEmployee(Long issueId, Long employeeId) {
-        return null;
+        Issue foundIssue = issueRepo.findById(issueId).orElseThrow(()->new NotFoundException("Không tìm thấy vấn đề!"));
+        Employee foundEmployee = employeeRepo.findById(employeeId).orElseThrow(()->new NotFoundException("Không tìm thấy nhân viên!"));
+        foundIssue.setEmployee(foundEmployee);
+        foundEmployee.setIssue(foundIssue);
+        return issueRepo.save(foundIssue);
+    }
+
+    public Issue removeEmployee(Long issueId, Long employeeId) {
+        Issue foundIssue = issueRepo.findById(issueId).orElseThrow(()->new NotFoundException("Không tìm thấy vấn đề!"));
+        Employee foundEmployee = employeeRepo.findById(employeeId).orElseThrow(()->new NotFoundException("Không tìm thấy nhân viên!"));
+        foundIssue.setEmployee(null);
+        foundEmployee.setIssue(null);
+        return issueRepo.save(foundIssue);
     }
 }
