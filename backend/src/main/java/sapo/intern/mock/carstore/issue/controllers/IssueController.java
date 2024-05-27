@@ -56,7 +56,7 @@ public class IssueController {
         return ResponseEntity.ok(new ApiResponse<>("1010", issueService.assignEmployee(issueId, employeeId)));
     }
 
-    @PostMapping("/{issueId}/employees/{employeeId}")
+    @DeleteMapping("/{issueId}/employees/{employeeId}")
     public ResponseEntity<ApiResponse> requestRemoveEmployee(
             @PathVariable("issueId") Long issueId,
             @PathVariable("productId") Long employeeId
