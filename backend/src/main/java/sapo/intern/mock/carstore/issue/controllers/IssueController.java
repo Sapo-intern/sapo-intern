@@ -1,5 +1,6 @@
 package sapo.intern.mock.carstore.issue.controllers;
 
+import com.cloudinary.Api;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,4 +47,12 @@ public class IssueController {
         return ResponseEntity.ok(new ApiResponse<>("1010", issueService.addProduct(issueId, productId, quantity)));
     }
 
+
+    @PostMapping("/{issueId}/employees/{employeeId}")
+    public ResponseEntity<ApiResponse> requestAssginEmployee(
+            @PathVariable("issueId") Long issueId,
+            @PathVariable("productId") Long employeeId
+    ) {
+        return ResponseEntity.ok(new ApiResponse<>("1010", issueService.assignEmployee(issueId, employeeId)));
+    }
 }

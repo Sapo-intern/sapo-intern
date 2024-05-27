@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sapo.intern.mock.carstore.issue.dtos.ProductCreateRequest;
 import sapo.intern.mock.carstore.issue.dtos.ProductUpdateRequest;
-import sapo.intern.mock.carstore.issue.models.Products;
+import sapo.intern.mock.carstore.issue.models.Product;
 import sapo.intern.mock.carstore.issue.services.ProductServices;
 import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
 
@@ -21,9 +21,9 @@ public class ProductController {
     @Autowired
     private ProductServices productServices;
     @PostMapping
-    public ResponseEntity<ApiResponse<Products>> createProduct(@Valid @RequestBody ProductCreateRequest request){
-        Products products = productServices.createProduct(request);
-        ApiResponse<Products> reponse = ApiResponse.<Products>builder()
+    public ResponseEntity<ApiResponse<Product>> createProduct(@Valid @RequestBody ProductCreateRequest request){
+        Product products = productServices.createProduct(request);
+        ApiResponse<Product> reponse = ApiResponse.<Product>builder()
                 .message("Thêm sản phẩm thành công")
                 .result(products)
                 .build();
@@ -31,16 +31,16 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Products>> getAllProductsPaged(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
-        Page<Products> productsPage = productServices.getAllProductPaginated(page, size);
+    public ResponseEntity<Page<Product>> getAllProductsPaged(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
+        Page<Product> productsPage = productServices.getAllProductPaginated(page, size);
         return ResponseEntity.ok(productsPage);
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ApiResponse<Products>> getProduct(@PathVariable("productId") Long productId){
-        Products products = productServices.getProduct(productId);
+    public ResponseEntity<ApiResponse<Product>> getProduct(@PathVariable("productId") Long productId){
+        Product products = productServices.getProduct(productId);
 
-        ApiResponse<Products> reponse = ApiResponse.<Products>builder()
+        ApiResponse<Product> reponse = ApiResponse.<Product>builder()
                 .message("Lấy dữ liệu thành công")
                 .result(products)
                 .build();
@@ -48,9 +48,9 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}")
-    public ResponseEntity<ApiResponse<Products>> updateProduct(@PathVariable Long productId,@Valid @RequestBody ProductUpdateRequest request){
-        Products products = productServices.updateProduct(productId, request);
-        ApiResponse<Products> reponse = ApiResponse.<Products>builder()
+    public ResponseEntity<ApiResponse<Product>> updateProduct(@PathVariable Long productId,@Valid @RequestBody ProductUpdateRequest request){
+        Product products = productServices.updateProduct(productId, request);
+        ApiResponse<Product> reponse = ApiResponse.<Product>builder()
                 .message("Cập nhật dữ liệu thành công")
                 .result(products)
                 .build();
@@ -68,7 +68,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    List<Products> getProductsByName(@RequestParam String name) {
+    List<Product> getProductsByName(@RequestParam String name) {
         return productServices.getProductByName(name);
     }
 

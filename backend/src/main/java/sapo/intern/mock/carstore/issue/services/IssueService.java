@@ -90,4 +90,8 @@ public class IssueService {
 
         return foundProduct;
     }
+
+    public Issue assignEmployee(Long issueId, Long employeeId) {
+        return null;
+    }
 }
