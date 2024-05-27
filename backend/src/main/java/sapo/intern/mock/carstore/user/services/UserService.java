@@ -1,88 +1,55 @@
 package sapo.intern.mock.carstore.user.services;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import sapo.intern.mock.carstore.user.dto.request.UserCreateRequest;
+import sapo.intern.mock.carstore.user.dto.request.UserUpdateRequest;
 import sapo.intern.mock.carstore.user.exception.AppException;
 import sapo.intern.mock.carstore.user.exception.ErrorCode;
 import sapo.intern.mock.carstore.user.models.User;
 import sapo.intern.mock.carstore.user.repositories.UserRepo;
 
-import java.util.UUID;
+import java.util.List;
 
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
 public class UserService {
-    @Autowired
-    private UserRepo userRepo;
+    UserRepo userRepo;
 
-    @Autowired
-    private EmailService emailService;
+    public Page<User> getAllUser(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepo.findAll(pageable);
+    }
 
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    public User getUser(String id){
+        return userRepo.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NO_DATA));
+    }
 
-    public User createUser(UserCreateRequest request) {
-        String tempPassword = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
-        String encodedPassword = passwordEncoder.encode(tempPassword);
+    public void deleteUser(String userId){
+        userRepo.deleteById(userId);
+    }
 
-        User existingUser = userRepo.findByEmail(request.getEmail());
-        if(existingUser != null)
-            throw new AppException(ErrorCode.USER_EXISTED);
-
-        User user = new User();
+    public User updateUser(String userId, UserUpdateRequest request) {
+        User user = getUser(userId);
 
         user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(encodedPassword);
+        user.setName(request.getName());
+        user.setPhone(request.getPhone());
+        user.setAddress(request.getAddress());
+        user.setAge(request.getAge());
+//        user.setUrlImage(request.getUrlImage());
 
-        userRepo.save(user);
-
-        emailService.sendEmail(request.getEmail(), "Thông tin đăng nhập", "Username: " + user.getUsername() + "\nPassword: " + tempPassword);
-        return user;
+        return userRepo.save(user);
     }
 
-    public void changePassword(String email, String oldPassword, String newPassword, String confirmNewPassword) {
-        User user = userRepo.findByEmail(email);
-        if (user == null) {
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
-        }
-
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new AppException(ErrorCode.INVALID_PASSWORD);
-        }
-
-        if (!newPassword.equals(confirmNewPassword)) {
-            throw new AppException(ErrorCode.PASSWORD_CONFIRMATION_FAILED);
-        }
-
-        if (!isValidPassword(newPassword)) {
-            throw new AppException(ErrorCode.WEAK_PASSWORD);
-        }
-
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        user.setPassword(encodedPassword);
-        user.setFirstLogin(false);
-        userRepo.save(user);
-    }
-
-    private boolean isValidPassword(String password) {
-        if (password.length() < 8) {
-            return false;
-        }
-
-        boolean hasLower = false, hasUpper = false, hasDigit = false;
-        for (char c : password.toCharArray()) {
-            if (Character.isLowerCase(c)) {
-                hasLower = true;
-            } else if (Character.isUpperCase(c)) {
-                hasUpper = true;
-            } else if (Character.isDigit(c)) {
-                hasDigit = true;
-            }
-        }
-        return hasLower && hasUpper && hasDigit;
+    public List<User> searchByNameOrPhoneNumber(String query) {
+        return userRepo.findByNameOrPhone(query, query);
     }
 }
 

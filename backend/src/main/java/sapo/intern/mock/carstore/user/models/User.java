@@ -1,14 +1,12 @@
 package sapo.intern.mock.carstore.user.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sapo.intern.mock.carstore.issue.models.Employee;
+import lombok.*;
 import sapo.intern.mock.carstore.user.enums.UserRole;
-import sapo.intern.mock.carstore.user.repositories.UserRepo;
 
+import java.time.Instant;
+
+@Data
 @AllArgsConstructor
 @Setter
 @Getter
@@ -18,8 +16,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//    @Enumerated(EnumType.ORDINAL)
-//    private UserRole role;
     private String username;
     private String password;
     private String name;
@@ -29,7 +25,8 @@ public class User {
     private Integer age;
     private String urlImage;
     private boolean firstLogin;
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
-//    private Employee employee;
+    private String resetPasswordToken;
+    private Instant resetPasswordTokenExpiry;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 }
