@@ -18,9 +18,9 @@ public class RepairService {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String serviceCode;
     private String description;
-    private int price;
-    private int totalCost;
+    private Double price;
     @OneToOne
     private Issue issue;
 }
