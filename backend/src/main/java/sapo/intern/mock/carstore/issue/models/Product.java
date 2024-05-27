@@ -23,10 +23,6 @@ public class RepairPart {
     private String description;
     /*Mnh giá theo .000 vnđ */
     private double unitPrice;
-    /*Mnh giá theo .000 vnđ */
-    private double totalPrice;
-
-    @OneToMany(mappedBy = "repairPart")
-    List<ServicePart> serviceParts;
-
+    @OneToMany(mappedBy = "part")
+    private List<StorageTransaction> transactions;
 }

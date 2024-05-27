@@ -6,15 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Table(name = "services")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
-public class RepairService {
+public class Service {
     @Id
     @Column(name = "service_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +21,4 @@ public class RepairService {
     private String description;
     private int price;
     private int totalCost;
-    @OneToMany(mappedBy = "repairService")
-    private List<ServicePart> serviceParts;
 }
