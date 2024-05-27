@@ -6,4 +6,5 @@ import sapo.intern.mock.carstore.issue.models.RepairService;
 
 @Repository
 public interface RepairServiceRepo extends JpaRepository<RepairService, Long> {
+    RepairService findByName(String name);
 }

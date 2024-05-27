@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sapo.intern.mock.carstore.issue.dtos.ServicesCreateRequest;
 import sapo.intern.mock.carstore.issue.dtos.ServicesUpdateRequest;
-import sapo.intern.mock.carstore.issue.models.ServiceModal;
+import sapo.intern.mock.carstore.issue.models.RepairService;
 import sapo.intern.mock.carstore.issue.services.Services;
 import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
 
@@ -21,9 +21,9 @@ public class ServicesController {
     @Autowired
     private Services services;
     @PostMapping
-    public ResponseEntity<ApiResponse<ServiceModal>> createServices(@Valid @RequestBody ServicesCreateRequest request){
-        ServiceModal servicesController = services.createServices(request);
-        ApiResponse<ServiceModal> reponse = ApiResponse.<ServiceModal>builder()
+    public ResponseEntity<ApiResponse<RepairService>> createServices(@Valid @RequestBody ServicesCreateRequest request){
+        RepairService servicesController = services.createServices(request);
+        ApiResponse<RepairService> reponse = ApiResponse.<RepairService>builder()
                 .message("Thêm dịch vụ thành công")
                 .result(servicesController)
                 .build();
@@ -31,16 +31,16 @@ public class ServicesController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ServiceModal>> getAllServicesPaged(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
-        Page<ServiceModal> servicesPage = services.getAllServicesPaginated(page, size);
+    public ResponseEntity<Page<RepairService>> getAllServicesPaged(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
+        Page<RepairService> servicesPage = services.getAllServicesPaginated(page, size);
         return ResponseEntity.ok(servicesPage);
     }
 
     @GetMapping("/{servicesId}")
-    public ResponseEntity<ApiResponse<ServiceModal>> getServices(@PathVariable("servicesId") Long servicesId){
-        ServiceModal servicesController = services.getServices(servicesId);
+    public ResponseEntity<ApiResponse<RepairService>> getServices(@PathVariable("servicesId") Long servicesId){
+        RepairService servicesController = services.getServices(servicesId);
 
-        ApiResponse<ServiceModal> reponse = ApiResponse.<ServiceModal>builder()
+        ApiResponse<RepairService> reponse = ApiResponse.<RepairService>builder()
                 .message("Lấy dữ liệu thành công")
                 .result(servicesController)
                 .build();
@@ -48,9 +48,9 @@ public class ServicesController {
     }
 
     @PatchMapping("/{servicesId}")
-    public ResponseEntity<ApiResponse<ServiceModal>> updateServices(@PathVariable Long servicesId,@Valid @RequestBody ServicesUpdateRequest request){
-        ServiceModal servicesController = services.updateServices(servicesId, request);
-        ApiResponse<ServiceModal> reponse = ApiResponse.<ServiceModal>builder()
+    public ResponseEntity<ApiResponse<RepairService>> updateServices(@PathVariable Long servicesId,@Valid @RequestBody ServicesUpdateRequest request){
+        RepairService servicesController = services.updateServices(servicesId, request);
+        ApiResponse<RepairService> reponse = ApiResponse.<RepairService>builder()
                 .message("Cập nhật dữ liệu thành công")
                 .result(servicesController)
                 .build();
@@ -68,7 +68,7 @@ public class ServicesController {
     }
 
     @GetMapping("/search")
-    List<ServiceModal> getServicesByName(@RequestParam String name) {
+    List<RepairService> getServicesByName(@RequestParam String name) {
         return services.getServicestByName(name);
     }
 
