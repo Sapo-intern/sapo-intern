@@ -2,7 +2,9 @@ package sapo.intern.mock.carstore.user.services;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,14 +14,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sapo.intern.mock.carstore.user.dto.request.LoginRequest;
+import sapo.intern.mock.carstore.user.dto.request.LogoutRequest;
 import sapo.intern.mock.carstore.user.dto.request.UserCreateRequest;
+import sapo.intern.mock.carstore.user.dto.response.IntrospectReponse;
+import sapo.intern.mock.carstore.user.dto.response.IntrospectRequest;
 import sapo.intern.mock.carstore.user.dto.response.LoginResponse;
 import sapo.intern.mock.carstore.user.enums.UserRole;
 import sapo.intern.mock.carstore.user.exception.AppException;
 import sapo.intern.mock.carstore.user.exception.ErrorCode;
+import sapo.intern.mock.carstore.user.models.InvalidatedToken;
 import sapo.intern.mock.carstore.user.models.User;
+import sapo.intern.mock.carstore.user.repositories.InvalidatedTokenRepository;
 import sapo.intern.mock.carstore.user.repositories.UserRepo;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -32,6 +40,7 @@ import java.util.UUID;
 public class AuthService {
     UserRepo userRepo;
     EmailService emailService;
+    InvalidatedTokenRepository invalidatedTokenRepository;
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @NonFinal
@@ -56,9 +65,6 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(encodedPassword);
         user.setFirstLogin(true);
-//        EnumSet<UserRole> roles = EnumSet.of(UserRole.TECHNICIAN);
-//        UserRole role = roles.iterator().next();
-//        user.setRole(role);
 
         UserRole role = request.getRole() != null ? request.getRole() : UserRole.TECHNICIAN;
         user.setRole(role);
@@ -83,7 +89,7 @@ public class AuthService {
         if (!authenticated)
             throw new AppException(ErrorCode.INVALID_PASSWORD);
 //        var token = generateToken(user);
-        var token = generateToken(request.getUsername());
+        var token = generateToken(user.getUsername(), user.getRole());
         return LoginResponse.builder()
                 .token(token)
                 .id(user.getId())
@@ -153,7 +159,7 @@ public class AuthService {
         user.setResetPasswordTokenExpiry(Instant.now().plus(1, ChronoUnit.HOURS));
         userRepo.save(user);
 
-        String resetLink = "http://localhost:8080/reset-password?token=" + token;
+        String resetLink = "http://localhost:5173/resetpassword/" + token;
 
         emailService.sendEmail(user.getEmail(), "Đặt lại mật khẩu", "Bấm vào link này để có thể đặt lại mật khẩu của bạn: " + resetLink + "\n\nVui lòng đặt lại mật khẩu luôn link này có hiệu lực trong vòng 1 tiếng");
         return token;
@@ -180,7 +186,7 @@ public class AuthService {
         userRepo.save(user);
     }
 
-    private String generateToken(String username) {
+    private String generateToken(String username, UserRole role) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -188,7 +194,8 @@ public class AuthService {
                 .issuer("quý")
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
-                .claim("userId", "Custom")
+                .jwtID(UUID.randomUUID().toString())
+                .claim("scope", role.name())
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -203,4 +210,56 @@ public class AuthService {
             throw new RuntimeException(e);
         }
     }
+
+    public void logout(LogoutRequest request) throws JOSEException, ParseException {
+        var signToken = verifyToken(request.getToken());
+
+        String jit = signToken.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+    }
+
+    private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
+        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        var verified = signedJWT.verify(verifier);
+
+        if (!(verified && expiryTime.after(new Date())))
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+
+        if (invalidatedTokenRepository
+                .existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+
+        return signedJWT;
+    }
+
+    public IntrospectReponse introspectReponse(IntrospectRequest request) throws JOSEException, ParseException {
+        var token = request.getToken();
+        boolean isValid = true;
+
+        try{
+            verifyToken(token);
+        }catch (AppException e){
+            isValid = false;
+        }
+
+        return IntrospectReponse.builder()
+                .valid(isValid)
+                .build();
+    }
+
+
+
+
 }
