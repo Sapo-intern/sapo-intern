@@ -55,4 +55,12 @@ public class IssueController {
     ) {
         return ResponseEntity.ok(new ApiResponse<>("1010", issueService.assignEmployee(issueId, employeeId)));
     }
+
+    @PostMapping("/{issueId}/employees/{employeeId}")
+    public ResponseEntity<ApiResponse> requestRemoveEmployee(
+            @PathVariable("issueId") Long issueId,
+            @PathVariable("productId") Long employeeId
+    ) {
+        return ResponseEntity.ok(new ApiResponse<>("1030", issueService.removeEmployee(issueId, employeeId)));
+    }
 }
