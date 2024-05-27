@@ -18,7 +18,7 @@ public class TransactionService {
     }
 
     public int getTransactions(Date fromDate, Date toDate) {
-        List<Transaction> transactions = transactionRepo.findAllPaidTransactionsBetweenDates(fromDate, toDate);
+        List<Transaction> transactions = transactionRepo.findAllPaidTransactionsBetweenDates(new java.sql.Date(fromDate.getTime()), new java.sql.Date(toDate.getTime()));
         return transactions.stream().mapToInt(Transaction::getAmount).sum();
     }
 }
