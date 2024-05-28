@@ -4,12 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 const { Search } = Input;
 import { useAuth } from "../../Context/ContextAuth";
-import ProductApi from "../../api/products";
+import ServiceApi from "../../api/services";
 
 const getColumns = (handleDelete) => [
   {
-    title: "Mã sản phẩm",
-    dataIndex: "productsCode",
+    title: "Mã dịch vụ",
+    dataIndex: "servicesCode",
   },
   {
     title: "Tên",
@@ -18,10 +18,6 @@ const getColumns = (handleDelete) => [
   {
     title: "Giá",
     dataIndex: "price",
-  },
-  {
-    title: "Số lượng",
-    dataIndex: "quantity",
   },
   {
     title: "Mô tả",
@@ -39,22 +35,22 @@ const getColumns = (handleDelete) => [
   },
 ];
 
-const ProductList = () => {
-  const [products, setProducts] = useState([]);
+const ServicesList = () => {
+  const [services, setServices] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
   const { token } = useAuth();
   const navigate = useNavigate();
 
-  const fetchProducts = async (page, size) => {
+  const fetchServices = async (page, size) => {
     try {
-      const response = await ProductApi.getAllProducts(page, size, {
+      const response = await ServiceApi.getAllService(page, size, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setProducts(response.content);
+      setServices(response.content);
       setTotalItems(response.totalElements);
     } catch (error) {
       console.error("Không có dữ liệu:", error);
@@ -63,19 +59,19 @@ const ProductList = () => {
 
   const searchSearch = async (name) => {
     try {
-      const response = await ProductApi.searchProduct(name, {
+      const response = await ServiceApi.searchService(name, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setProducts(response);
+      setServices(response);
     } catch (error) {
       console.error("Không tìm thấy sản phẩm:", error);
     }
   };
 
   useEffect(() => {
-    fetchProducts(currentPage, pageSize);
+    fetchServices(currentPage, pageSize);
   }, [currentPage, pageSize]);
 
   const handlePageChange = (page, pageSize) => {
@@ -96,20 +92,20 @@ const ProductList = () => {
       });
 
       if (result.isConfirmed) {
-        await ProductApi.deleteProduct(id, {
+        await ServiceApi.deleteService(id, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        Swal.fire("Đã xóa!", "Sản phẩm đã được xóa.", "success").then(() =>
-          navigate("/product")
+        Swal.fire("Đã xóa!", "Dịch vụ đã được xóa.", "success").then(() =>
+          navigate("/services")
         );
-        fetchProducts(currentPage, pageSize);
+        fetchServices(currentPage, pageSize);
       }
     } catch (error) {
       Swal.fire({
         title: "Error!",
-        text: "Xóa sản phẩm thất bại!",
+        text: "Xóa dịch vụ thất bại!",
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -120,17 +116,17 @@ const ProductList = () => {
     if (value) {
       searchSearch(value);
     } else {
-      fetchProducts(currentPage, pageSize);
+      fetchServices(currentPage, pageSize);
     }
   };
 
   return (
     <>
-      <h1>Sản phẩm</h1>
+      <h1>DỊCH VỤ</h1>
       <Row style={{ marginBottom: 16, marginTop: 16 }}>
         <Col span={8}>
           <Search
-            placeholder="Vui lòng nhập sản phẩm"
+            placeholder="Vui lòng nhập dịch vụ"
             allowClear
             enterButton="Tìm kiếm"
             size="large"
@@ -143,16 +139,16 @@ const ProductList = () => {
           offset={8}
           style={{ display: "flex", justifyContent: "end" }}
         >
-          <Link to="/product/add">
+          <Link to="/services/add">
             <Button size="large" type="primary">
-              Thêm sản phẩm
+              Thêm dịch vụ
             </Button>
           </Link>
         </Col>
       </Row>
       <Table
         columns={getColumns(handleDelete)}
-        dataSource={products.map((item) => ({
+        dataSource={services.map((item) => ({
           ...item,
           key: item.id,
         }))}
@@ -169,4 +165,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default ServicesList;

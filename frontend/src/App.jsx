@@ -3,7 +3,10 @@ import ProductList from "./component/products/ProductsList";
 import Layouts from "./Layout";
 import Home from "./component/home/Home";
 import ProductsAdd from "./component/products/ProductsAdd";
-import ProductsDetail from "./component/products/ProductsDetail";
+import ProductEdit  from "./component/products/ProductEdit";
+import ServicesList  from "./component/services/ServicesList";
+import ServicesAdd  from "./component/services/ServicesAdd";
+import ServicesEdit  from "./component/services/ServicesEdit";
 import Login from "./component/Auth/Login";
 import NotFound from "./component/NotFound";
 import UserList from "./component/User/UserList";
@@ -34,7 +37,11 @@ const App = () => {
 
             <Route path="/product" element={<ProductList />} />
             <Route path="/product/add" element={<ProductsAdd />} />
-            <Route path="/product/:id" element={<ProductsDetail />} />
+            <Route path="/product/:id" element={<ProductEdit />} />
+
+            <Route path="/services" element={<ServicesList/>} />
+            <Route path="/services/add" element={<ServicesAdd/>} />
+            <Route path="/services/:id" element={<ServicesEdit />} />
 
             <Route path="/user" element={<UserList />} />
             <Route path="/user/add" element={<UserAdd />} />

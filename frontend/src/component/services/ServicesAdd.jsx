@@ -2,15 +2,14 @@ import { Button, Col, Form, Input, Row } from "antd";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import ProductApi from "../../api/products";
 import { useAuth } from "../../Context/ContextAuth";
+import ServiceApi from "../../api/services";
 
-const ProductsAdd = () => {
+const ServicesAdd = () => {
   const navigate = useNavigate();
-  const [productsCode, setProductsCode] = useState("");
+  const [servicesCode, setServicesCode] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [quantity, setQuantity] = useState("");
   const [description, setDescription] = useState("");
   const { token } = useAuth();
 
@@ -18,12 +17,11 @@ const ProductsAdd = () => {
     try {
       e.preventDefault();
 
-      await ProductApi.addProduct(
+      await ServiceApi.addService(
         {
-          productsCode,
+          servicesCode,
           name,
           price,
-          quantity,
           description,
         },
         {
@@ -35,14 +33,14 @@ const ProductsAdd = () => {
 
       Swal.fire({
         title: "Success!",
-        text: "Thêm sản phẩm thành công",
+        text: "Thêm dịch vụ thành công",
         icon: "success",
         confirmButtonText: "OK",
-      }).then(() => navigate("/product"));
+      }).then(() => navigate("/service"));
     } catch (error) {
       Swal.fire({
         title: "Error!",
-        text: "Thêm sản phẩm thất bại!",
+        text: "Thêm dịch vụ thất bại!",
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -58,7 +56,7 @@ const ProductsAdd = () => {
 
   return (
     <>
-      <h1 style={{ marginBottom: 16, textAlign: "center" }}>Thêm sản phẩm</h1>
+      <h1 style={{ marginBottom: 16, textAlign: "center" }}>Thêm dịch vụ</h1>
 
       <Form
         name="basic"
@@ -79,8 +77,8 @@ const ProductsAdd = () => {
         autoComplete="off"
       >
         <Form.Item
-          label="Mã sản phẩm"
-          name="productsCode"
+          label="Mã dịch vụ"
+          name="servicesCode"
           rules={[
             {
               required: true,
@@ -89,18 +87,18 @@ const ProductsAdd = () => {
           ]}
         >
           <Input
-            value={productsCode}
-            onChange={(e) => setProductsCode(e.target.value)}
+            value={servicesCode}
+            onChange={(e) => setServicesCode(e.target.value)}
           />
         </Form.Item>
 
         <Form.Item
-          label="Tên sản phẩm"
+          label="Tên dịch vụ"
           name="name"
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập tên sản phẩm ",
+              message: "Vui lòng nhập tên dịch vụ ",
             },
           ]}
         >
@@ -108,12 +106,12 @@ const ProductsAdd = () => {
         </Form.Item>
 
         <Form.Item
-          label="Giá sản phẩm"
+          label="Giá dịch vụ"
           name="price"
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập giá sản phẩm ",
+              message: "Vui lòng nhập giá dịch vụ ",
             },
           ]}
         >
@@ -121,23 +119,6 @@ const ProductsAdd = () => {
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Số lượng sản phẩm"
-          name="price"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập số lượng sản phẩm ",
-            },
-          ]}
-        >
-          <Input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
           />
         </Form.Item>
 
@@ -159,7 +140,7 @@ const ProductsAdd = () => {
           <Col>
             <Form.Item style={{ display: "flex" }}>
               <Button type="primary">
-                <Link to="/product">Quay lại</Link>
+                <Link to="/service">Quay lại</Link>
               </Button>
             </Form.Item>
           </Col>
@@ -168,4 +149,4 @@ const ProductsAdd = () => {
     </>
   );
 };
-export default ProductsAdd;
+export default ServicesAdd;

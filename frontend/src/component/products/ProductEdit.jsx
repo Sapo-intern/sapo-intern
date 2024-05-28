@@ -1,31 +1,50 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import Swal from "sweetalert2";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import ProductApi from "../../api/products";
 import { useAuth } from "../../Context/ContextAuth";
 
-const ProductsAdd = () => {
+const ProductEdit = () => {
   const navigate = useNavigate();
-  const [productsCode, setProductsCode] = useState("");
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [description, setDescription] = useState("");
+  const [product, setProduct] = useState(null);
   const { token } = useAuth();
+  const { id } = useParams();
+  const [form] = Form.useForm();
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await ProductApi.getOneProduct(id, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const productData = response.result;
+        setProduct(productData);
+
+        if (productData) {
+          form.setFieldsValue({
+            productCode: productData.productCode,
+            name: productData.name,
+            price: productData.price,
+            quantity: productData.quantity,
+            description: productData.description,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching category:", error);
+      }
+    };
+
+    fetchProduct();
+  }, [id, token, form]);
+
+  const handleSubmit = async (values) => {
     try {
-      e.preventDefault();
-
-      await ProductApi.addProduct(
-        {
-          productsCode,
-          name,
-          price,
-          quantity,
-          description,
-        },
+      await ProductApi.updateProduct(
+        id,
+        values,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -35,33 +54,33 @@ const ProductsAdd = () => {
 
       Swal.fire({
         title: "Success!",
-        text: "Thêm sản phẩm thành công",
+        text: "Cập nhật sản phẩm thành công",
         icon: "success",
         confirmButtonText: "OK",
       }).then(() => navigate("/product"));
     } catch (error) {
       Swal.fire({
         title: "Error!",
-        text: "Thêm sản phẩm thất bại!",
+        text: "Cập nhật sản phẩm thất bại!",
         icon: "error",
         confirmButtonText: "OK",
       });
     }
   };
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
-  };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
   return (
     <>
-      <h1 style={{ marginBottom: 16, textAlign: "center" }}>Thêm sản phẩm</h1>
+      <h1 style={{ marginBottom: 16, textAlign: "center" }}>
+        Cập nhật sản phẩm
+      </h1>
 
       <Form
         name="basic"
+        form={form}
         labelCol={{
           span: 8,
         }}
@@ -71,27 +90,21 @@ const ProductsAdd = () => {
         style={{
           maxWidth: 600,
         }}
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
+        onFinish={handleSubmit}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item
           label="Mã sản phẩm"
-          name="productsCode"
+          name="productCode"
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập mã dịch vụ ",
+              message: "Vui lòng nhập mã sản phẩm ",
             },
           ]}
         >
-          <Input
-            value={productsCode}
-            onChange={(e) => setProductsCode(e.target.value)}
-          />
+          <Input />
         </Form.Item>
 
         <Form.Item
@@ -104,7 +117,7 @@ const ProductsAdd = () => {
             },
           ]}
         >
-          <Input value={name} onChange={(e) => setName(e.target.value)} />
+          <Input />
         </Form.Item>
 
         <Form.Item
@@ -117,16 +130,12 @@ const ProductsAdd = () => {
             },
           ]}
         >
-          <Input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
+          <Input type="number" />
         </Form.Item>
 
         <Form.Item
           label="Số lượng sản phẩm"
-          name="price"
+          name="quantity"
           rules={[
             {
               required: true,
@@ -134,24 +143,17 @@ const ProductsAdd = () => {
             },
           ]}
         >
-          <Input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-          />
+          <Input type="number" />
         </Form.Item>
 
         <Form.Item label="Mô tả" name="description">
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+          <Input />
         </Form.Item>
 
         <Row>
           <Col>
             <Form.Item style={{ display: "flex", marginRight: 12 }}>
-              <Button type="primary" htmlType="submit" onClick={handleSubmit}>
+              <Button type="primary" htmlType="submit">
                 Thêm
               </Button>
             </Form.Item>
@@ -168,4 +170,5 @@ const ProductsAdd = () => {
     </>
   );
 };
-export default ProductsAdd;
+
+export default ProductEdit;
