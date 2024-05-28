@@ -14,7 +14,6 @@ import java.io.File;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-     String username;
      String name;
 
      @Pattern(regexp="\\d{10}", message="Số điện thoại phải có 10 chữ số")
