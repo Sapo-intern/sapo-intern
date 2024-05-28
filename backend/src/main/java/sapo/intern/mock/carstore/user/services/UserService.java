@@ -50,8 +50,15 @@ public class UserService {
         return userRepo.save(user);
     }
 
-    public List<User> searchByNameOrPhoneNumber(String query) {
-        return userRepo.findByNameOrPhone(query, query);
+    public List<User> getUserByKeyword(String keyword) {
+        List<User> user = userRepo.findByKeywordContainingIgnoreCase(keyword);
+
+        if(user.isEmpty()) {
+            throw new AppException(ErrorCode.NO_DATA);
+        }
+
+        return user;
     }
+
 }
 

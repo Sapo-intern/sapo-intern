@@ -46,8 +46,8 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<User>>> searchUsersByNameOrPhoneNumber(@RequestParam String query) {
-        List<User> user = userService.searchByNameOrPhoneNumber(query);
+    public ResponseEntity<ApiResponse<List<User>>> searchUsersByNameOrPhoneNumber(@RequestParam String keyword) {
+        List<User> user = userService.getUserByKeyword(keyword);
         ApiResponse<List<User>> response = ApiResponse.<List<User>>builder()
                 .message("Danh sách người dùng được tìm thấy")
                 .result(user)
