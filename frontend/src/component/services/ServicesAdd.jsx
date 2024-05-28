@@ -2,7 +2,6 @@ import { Button, Col, Form, Input, Row } from "antd";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import ProductApi from "../../api/products";
 import { useAuth } from "../../Context/ContextAuth";
 import ServiceApi from "../../api/services";
 
