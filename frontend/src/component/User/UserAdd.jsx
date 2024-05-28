@@ -6,7 +6,6 @@ import auth from "../../api/auth";
 
 const UserAdd = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [roles, setRoles] = useState([]);
@@ -34,7 +33,6 @@ const UserAdd = () => {
       e.preventDefault();
   
       await auth.register({
-        username,
         email,
         role: selectedRole,
       });
@@ -84,18 +82,6 @@ const UserAdd = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item
-          label="Tên đăng nhập"
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập tên đăng nhập ",
-            },
-          ]}
-        >
-          <Input value={username} onChange={(e) => setUsername(e.target.value)}/>
-        </Form.Item>
 
         <Form.Item
           label="Email"
