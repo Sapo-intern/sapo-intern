@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import sapo.intern.mock.carstore.user.dto.request.UserUpdateRequest;
 import sapo.intern.mock.carstore.user.exception.AppException;
@@ -21,6 +22,7 @@ import java.util.List;
 public class UserService {
     UserRepo userRepo;
 
+//    @PreAuthorize("hasRole('MANAGER')")
     public Page<User> getAllUser(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepo.findAll(pageable);
@@ -38,7 +40,7 @@ public class UserService {
     public User updateUser(String userId, UserUpdateRequest request) {
         User user = getUser(userId);
 
-        user.setUsername(request.getUsername());
+//        user.setUsername(request.getUsername());
         user.setName(request.getName());
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
