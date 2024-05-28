@@ -1,7 +1,6 @@
 package sapo.intern.mock.carstore.issue.dtos;
 
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -29,7 +28,5 @@ public class ServicesUpdateRequest {
     String urlImage;
 
     @NotNull
-    @Min(value = 1, message = "Số lượng phải là số và lớn hơn 1")
-    Integer quantity;
     String description;
 }
