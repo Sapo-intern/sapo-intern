@@ -32,6 +32,7 @@ public class Customer {
     private String phoneNumber;
     @Email
     private String email;
+    private String address;
     @OneToMany(mappedBy = "customer")
     private List<Ticket> tickets = new ArrayList<>();
     @OneToMany(
