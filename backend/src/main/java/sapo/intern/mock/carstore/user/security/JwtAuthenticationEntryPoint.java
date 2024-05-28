@@ -7,8 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import sapo.intern.mock.carstore.global.exceptions.ErrorCode;
 import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
-import sapo.intern.mock.carstore.user.exception.ErrorCode;
 
 import java.io.IOException;
 

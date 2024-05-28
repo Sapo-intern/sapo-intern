@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sapo.intern.mock.carstore.global.exceptions.AppException;
+import sapo.intern.mock.carstore.global.exceptions.ErrorCode;
 import sapo.intern.mock.carstore.user.dto.request.LoginRequest;
 import sapo.intern.mock.carstore.user.dto.request.LogoutRequest;
 import sapo.intern.mock.carstore.user.dto.request.UserCreateRequest;
@@ -20,8 +22,6 @@ import sapo.intern.mock.carstore.user.dto.response.IntrospectReponse;
 import sapo.intern.mock.carstore.user.dto.response.IntrospectRequest;
 import sapo.intern.mock.carstore.user.dto.response.LoginResponse;
 import sapo.intern.mock.carstore.user.enums.UserRole;
-import sapo.intern.mock.carstore.user.exception.AppException;
-import sapo.intern.mock.carstore.user.exception.ErrorCode;
 import sapo.intern.mock.carstore.user.models.InvalidatedToken;
 import sapo.intern.mock.carstore.user.models.User;
 import sapo.intern.mock.carstore.user.repositories.InvalidatedTokenRepository;
@@ -50,18 +50,12 @@ public class AuthService {
         String tempPassword = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
         String encodedPassword = passwordEncoder.encode(tempPassword);
 
-        User existingUserByUsername = userRepo.findByUsername(request.getUsername());
-        if (existingUserByUsername != null) {
-            throw new AppException(ErrorCode.USER_EXISTED);
-        }
-
         User existingUserByEmail = userRepo.findByEmail(request.getEmail());
         if (existingUserByEmail != null) {
             throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
 
         User user = new User();
-        user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(encodedPassword);
         user.setFirstLogin(true);
@@ -71,16 +65,16 @@ public class AuthService {
 
         userRepo.save(user);
 
-        emailService.sendEmail(request.getEmail(), "Thông tin đăng nhập", "Chào mừng bạn đến với công ty của chúng tôi và dưới đây là thông tin đăng nhập vào hệ thống của công ty" + "\nUsername: " + user.getUsername() + "\nPassword: " + tempPassword);
+        emailService.sendEmail(request.getEmail(), "Thông tin đăng nhập", "Chào mừng bạn đến với công ty của chúng tôi và dưới đây là thông tin đăng nhập vào hệ thống của công ty" + "\nEmail: " + user.getEmail() + "\nPassword: " + tempPassword);
         return user;
     }
 
     public LoginResponse loginUser(LoginRequest request){
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
-        var user = userRepo.findByUsername(request.getUsername());
+        var user = userRepo.findByEmail(request.getEmail());
         if (user == null) {
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
+            throw new AppException(ErrorCode.EMAIL_NOT_FOUND);
         }
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(),
@@ -89,11 +83,10 @@ public class AuthService {
         if (!authenticated)
             throw new AppException(ErrorCode.INVALID_PASSWORD);
 //        var token = generateToken(user);
-        var token = generateToken(user.getUsername(), user.getRole());
+        var token = generateToken(user.getEmail(), user.getRole());
         return LoginResponse.builder()
                 .token(token)
                 .id(user.getId())
-                .username(user.getUsername())
                 .name(user.getName())
                 .phone(user.getPhone())
                 .email(user.getEmail())

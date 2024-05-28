@@ -14,7 +14,6 @@ import sapo.intern.mock.carstore.user.enums.UserRole;
 public class LoginResponse {
     String token;
     private Long id;
-    private String username;
     private String name;
     private String phone;
     private String email;

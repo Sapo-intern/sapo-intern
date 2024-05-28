@@ -8,9 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import sapo.intern.mock.carstore.global.exceptions.AppException;
+import sapo.intern.mock.carstore.global.exceptions.ErrorCode;
 import sapo.intern.mock.carstore.user.dto.request.UserUpdateRequest;
-import sapo.intern.mock.carstore.user.exception.AppException;
-import sapo.intern.mock.carstore.user.exception.ErrorCode;
 import sapo.intern.mock.carstore.user.models.User;
 import sapo.intern.mock.carstore.user.repositories.UserRepo;
 

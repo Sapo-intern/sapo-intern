@@ -15,8 +15,6 @@ import sapo.intern.mock.carstore.user.enums.UserRole;
 @Getter
 @NoArgsConstructor
 public class UserCreateRequest {
-    @Size(min = 3,message = "USERNAME_INVALID")
-    private String username;
     @Email(message = "EMAIL_INVALID")
     private String email;
     @Enumerated(EnumType.STRING)
