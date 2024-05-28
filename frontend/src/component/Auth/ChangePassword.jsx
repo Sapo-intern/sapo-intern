@@ -17,7 +17,7 @@ const ChangePassword = () => {
   const onSubmit = async (data) => {
     try {
        await auth.changePassword({
-        email: user,
+        email: user.email,
         oldPassword: data.oldPassword,
         newPassword: data.newPassword,
         confirmNewPassword: data.confirmNewPassword

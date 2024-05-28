@@ -14,7 +14,7 @@ const Login = () => {
     try {
     
       const response = await auth.login({
-        username: data.username,
+        email: data.email,
         password: data.password,
       });
 
@@ -55,15 +55,15 @@ const Login = () => {
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-group first ">
-                    <label htmlFor="username">Tên đăng nhập</label>
+                    <label htmlFor="email">Email</label>
                     <input
                       type="text"
                       className="form-control"
-                      id="username"
-                      {...register("username", { required: true })}
+                      id="email"
+                      {...register("email", { required: true })}
                     />
                   </div>
-                    {errors.username && <span className="error">Tên đăng nhập không được để trống</span>}
+                    {errors.email && <span className="error">Email không được để trống</span>}
                   <div className="form-group last ">
                     <label htmlFor="password">Mật khẩu</label>
                     <input
