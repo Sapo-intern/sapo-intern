@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import auth from '../api/auth';
 
 const AuthContext = createContext();
@@ -33,18 +33,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // useEffect(() => {
-  //   const savedUser = localStorage.getItem("user");
-  //   if (savedUser) {
-  //     try {
-  //       const parsedUser = JSON.parse(savedUser);
-  //       setUser(parsedUser);
-  //       setRole(parsedUser.role_id === 4 ? 'user' : 'doctor');
-  //     } catch (error) {
-  //       console.error("Lỗi khi parse dữ liệu từ localStorage:", error);
-  //     }
-  //   }
-  // }, [token]);
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Lỗi khi parse dữ liệu từ localStorage:", error);
+      }
+    }
+  }, []);
 
   const contextValue = {
     token,

@@ -18,7 +18,7 @@ import { useAuth } from "./Context/ContextAuth";
 
 const Layouts = () => {
   const navigate = useNavigate();
-  const { onLogout } = useAuth();
+  const { onLogout, user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -36,7 +36,7 @@ const Layouts = () => {
       });
 
       if (result.isConfirmed) {
-         await onLogout();
+        await onLogout();
         Swal.fire("Đã đăng xuất!", "", "success").then(() =>
           navigate("/login")
         );
@@ -67,7 +67,12 @@ const Layouts = () => {
     getItem("Khách hàng", "4", <UsergroupAddOutlined />, "/customers"),
     getItem("Sản phẩm", "5", <ProductOutlined />, "/product"),
     getItem("Dịch vụ", "6", <SettingOutlined />, "/services"),
-    getItem("Thông tin cá nhân", "7", <ProfileOutlined />, "/services"),
+    getItem(
+      "Thông tin cá nhân",
+      "7",
+      <ProfileOutlined />,
+      user ? `/user/${user.id}` : "/"
+    ),
     getItem("Đăng xuất", "8", <LogoutOutlined />),
   ];
 
@@ -82,21 +87,26 @@ const Layouts = () => {
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <div className="demo-logo-vertical" />
-        <div style={{ backgroundColor: "blue", padding: 50 }}>image</div>
+        <div className="demo-logo-vertical">
+          <img width={200} src="/sapo.png" alt="" />
+        </div>
+
         <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-        {items.map((item) => (
+          {items.map((item) => (
             <Menu.Item
               key={item.key}
               icon={item.icon}
-              onClick={item.key === "8" ? handleLogout : undefined} 
+              onClick={item.key === "8" ? handleLogout : undefined}
             >
-              {item.path ? <Link to={item.path}>{item.label}</Link> : item.label}
+              {item.path ? (
+                <Link to={item.path}>{item.label}</Link>
+              ) : (
+                item.label
+              )}
             </Menu.Item>
           ))}
         </Menu>
       </Sider>
-      <h1></h1>
       <Layout>
         <Header
           style={{

@@ -18,7 +18,7 @@ const Login = () => {
         password: data.password,
       });
 
-      onLoginSuccess(response.result.token,response.result.email);
+      onLoginSuccess(response.result.token,response.result);
 
       Swal.fire({
         title: "Success!",

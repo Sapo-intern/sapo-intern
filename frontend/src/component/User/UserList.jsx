@@ -9,48 +9,10 @@ const getColumns = (handleDelete) => [
   {
     title: "Tên",
     dataIndex: "name",
-    // filters: [
-    //   {
-    //     text: "Joe",
-    //     value: "Joe",
-    //   },
-    //   {
-    //     text: "Category 1",
-    //     value: "Category 1",
-    //     children: [
-    //       {
-    //         text: "Yellow",
-    //         value: "Yellow",
-    //       },
-    //       {
-    //         text: "Pink",
-    //         value: "Pink",
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     text: "Category 2",
-    //     value: "Category 2",
-    //     children: [
-    //       {
-    //         text: "Green",
-    //         value: "Green",
-    //       },
-    //       {
-    //         text: "Black",
-    //         value: "Black",
-    //       },
-    //     ],
-    //   },
-    // ],
-    // filterMode: "tree",
-    // filterSearch: true,
-    // onFilter: (value, record) => record.name.includes(value),
-    // width: "30%",
   },
   {
     title: "Số điện thoại",
-    dataIndex: "age",
+    dataIndex: "phone",
     sorter: (a, b) => a.age - b.age,
   },
   {
@@ -107,11 +69,6 @@ const getColumns = (handleDelete) => [
   },
 ];
 
-
-
-// const onChange = (pagination, filters, sorter, extra) => {
-//   console.log("params", pagination, filters, sorter, extra);
-// };
 const UserList = () => {
   const [user, setUser] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -180,7 +137,7 @@ const UserList = () => {
 
   return (
     <>
-      <h1>SẢN PHẨM</h1>
+      <h1>Danh sách nhân viên</h1>
       <Row style={{ marginBottom: 16, marginTop: 16 }}>
         <Col span={8}>
           <Search

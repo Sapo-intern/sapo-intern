@@ -33,13 +33,12 @@ const UserAdd = () => {
     try {
       e.preventDefault();
   
-      const response = await auth.register({
+      await auth.register({
         username,
         email,
         role: selectedRole,
       });
 
-      console.log(response);
       Swal.fire({
         title: "Success!",
         text: "Thêm nhân viên thành công",
@@ -146,7 +145,7 @@ const UserAdd = () => {
           </Col>
           <Col>
             <Form.Item style={{ display: "flex" }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary">
                 Quay lại
               </Button>
             </Form.Item>

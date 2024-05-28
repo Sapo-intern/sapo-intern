@@ -15,6 +15,7 @@ import PrivateRouter from "./PrivateRouter";
 import ForgotPassword from "./component/Auth/ForgotPassword";
 import ResetPassword from "./component/Auth/ResetPassword";
 import ChangePassword from "./component/Auth/ChangePassword";
+import UserEdit from "./component/User/UserEdit";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
 
             <Route path="/user" element={<UserList />} />
             <Route path="/user/add" element={<UserAdd />} />
+            <Route path="/user/:id" element={<UserEdit />} />
           </Route>
         </Route>
         <Route path="/error" element={<NotFound />} />

@@ -6,14 +6,19 @@ const UserApi = {
     return instance.get(url, headers);
   },
 
+  getOneUser(id, headers) {
+    const url = `/users/${id}`;
+    return instance.get(url, headers);
+  },
+
   delete(id, headers) {
     const url = `/users/${id}`;
     return instance.delete(url, headers);
   },
 
-  editCategory(id, data, headers) {
-    const url = `/category/${id}`;  
-    return instance.put(url, data, headers);
+  editUser(id, data, headers) {
+    const url = `/users/${id}`;  
+    return instance.patch(url, data, headers);
   },
 };
 
