@@ -22,7 +22,7 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String plateNumber;
-    private String name;
+    private String type;
     private String brand;
     private String color;
     @ManyToOne
@@ -33,7 +33,7 @@ public class Vehicle {
     public void setVehicle(Vehicle vehicle) {
         this.plateNumber = vehicle.plateNumber;
         this.brand = vehicle.brand;
-        this.name = vehicle.name;
+        this.type = vehicle.type;
         this.color = vehicle.color;
     }
 }

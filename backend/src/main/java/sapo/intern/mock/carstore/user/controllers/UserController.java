@@ -25,6 +25,9 @@ public class UserController {
         return ResponseEntity.ok(userPage);
     }
 
+
+
+
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<User>> getProduct(@PathVariable("userId") String userId){
         User user = userService.getUser(userId);

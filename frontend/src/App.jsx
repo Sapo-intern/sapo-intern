@@ -16,10 +16,15 @@ import ForgotPassword from "./component/Auth/ForgotPassword";
 import ResetPassword from "./component/Auth/ResetPassword";
 import ChangePassword from "./component/Auth/ChangePassword";
 import UserEdit from "./component/User/UserEdit";
+import TicketList from "./component/tickets/TicketList";
+import TicketAdd from "./component/tickets/TicketAdd";
+import TicketDetail from "./component/tickets/TicketDetail";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   return (
     <Router>
+      <ToastContainer/>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
@@ -28,7 +33,9 @@ const App = () => {
 
         <Route element={<PrivateRouter />}>
           <Route element={<Layouts />}>
+
             <Route path="/" element={<Home />} />
+
             <Route path="/product" element={<ProductList />} />
             <Route path="/product/add" element={<ProductsAdd />} />
             <Route path="/product/:id" element={<ProductEdit />} />
@@ -40,6 +47,11 @@ const App = () => {
             <Route path="/user" element={<UserList />} />
             <Route path="/user/add" element={<UserAdd />} />
             <Route path="/user/:id" element={<UserEdit />} />
+
+            <Route path="ticket" element= {<TicketList/>}/>
+            <Route path="ticket/add" element= {<TicketAdd/>}/>
+            <Route path="ticket/:id" element= {<TicketDetail/>}/>
+
           </Route>
         </Route>
         <Route path="/error" element={<NotFound />} />
