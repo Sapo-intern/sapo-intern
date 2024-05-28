@@ -32,7 +32,7 @@ const auth = {
   },
 
   logout(data) {
-    const url = "/auth/logout";
+    const url = "/logout-user";
     return instance.post(url, data);
   },
 

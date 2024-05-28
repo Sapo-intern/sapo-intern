@@ -98,7 +98,7 @@ const ServicesList = () => {
           },
         });
         Swal.fire("Đã xóa!", "Dịch vụ đã được xóa.", "success").then(() =>
-          navigate("/product")
+          navigate("/services")
         );
         fetchServices(currentPage, pageSize);
       }
@@ -139,7 +139,7 @@ const ServicesList = () => {
           offset={8}
           style={{ display: "flex", justifyContent: "end" }}
         >
-          <Link to="/service/add">
+          <Link to="/services/add">
             <Button size="large" type="primary">
               Thêm dịch vụ
             </Button>
