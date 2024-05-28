@@ -15,6 +15,7 @@ import PrivateRouter from "./PrivateRouter";
 import ForgotPassword from "./component/Auth/ForgotPassword";
 import ResetPassword from "./component/Auth/ResetPassword";
 import ChangePassword from "./component/Auth/ChangePassword";
+import UserEdit from "./component/User/UserEdit";
 import TicketList from "./component/tickets/TicketList";
 import TicketAdd from "./component/tickets/TicketAdd";
 import TicketDetail from "./component/tickets/TicketDetail";
@@ -45,7 +46,7 @@ const App = () => {
 
             <Route path="/user" element={<UserList />} />
             <Route path="/user/add" element={<UserAdd />} />
-
+            <Route path="/user/:id" element={<UserEdit />} />
 
             <Route path="ticket" element= {<TicketList/>}/>
             <Route path="ticket/add" element= {<TicketAdd/>}/>
