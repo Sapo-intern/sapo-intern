@@ -1,10 +1,13 @@
 package sapo.intern.mock.carstore.user.controllers;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sapo.intern.mock.carstore.user.dto.request.UserUpdateRequest;
 import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
 import sapo.intern.mock.carstore.user.models.User;
@@ -14,18 +17,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
     @Autowired
     private UserService userService;
 
     @GetMapping()
-    public ResponseEntity<Page<User>> getAllUser(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
+    public ResponseEntity<Page<User>> getAllUser(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
         Page<User> userPage = userService.getAllUser(page, size);
         return ResponseEntity.ok(userPage);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<ApiResponse<User>> getProduct(@PathVariable("userId") String userId){
+    public ResponseEntity<ApiResponse<User>> getProduct(@PathVariable("userId") String userId) {
         User user = userService.getUser(userId);
 
         ApiResponse<User> reponse = ApiResponse.<User>builder()
@@ -36,8 +40,11 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable String userId, @Valid @RequestBody UserUpdateRequest request){
-        User user = userService.updateUser(userId, request);
+    public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable String userId,
+                                                        @Valid @RequestPart("userUpdateRequest") UserUpdateRequest request,
+                                                        @RequestPart("imageFile") MultipartFile imageFile
+                                                        ) {
+        User user = userService.updateUser(userId, request, imageFile);
         ApiResponse<User> reponse = ApiResponse.<User>builder()
                 .message("Cập nhật dữ liệu thành công")
                 .result(user)
@@ -56,10 +63,16 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    ApiResponse<String> deleteUser(@PathVariable String userId){
+    ApiResponse<String> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
         return ApiResponse.<String>builder()
                 .result("Bạn đã xóa thành công")
                 .build();
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile file) {
+        String data = userService.upload(file);
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 }
