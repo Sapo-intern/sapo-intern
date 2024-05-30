@@ -93,10 +93,23 @@ const UserList = () => {
     }
   };
 
+  const searchUser = async (keyword) => {
+    try {
+      const response = await UserApi.searchUser(keyword, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUser(response.result);
+    } catch (error) {
+      console.error("Không tìm thấy nhân viên:", error);
+    }
+  };
+
   useEffect(() => {
     fetchUser(currentPage, pageSize);
   }, [currentPage, pageSize]);
-
+  
   const handlePageChange = (page, pageSize) => {
     setCurrentPage(page - 1);
     setPageSize(pageSize);
@@ -135,17 +148,26 @@ const UserList = () => {
     }
   };
 
+  const handleSearch = (value) => {
+    if (value) {
+      searchUser(value);
+    } else {
+      fetchUser(currentPage, pageSize);
+    }
+  };
+
   return (
     <>
       <h1>Danh sách nhân viên</h1>
       <Row style={{ marginBottom: 16, marginTop: 16 }}>
         <Col span={8}>
           <Search
-            placeholder="Vui lòng nhập sản phẩm"
+            placeholder="Nhập thông tin nhân viên"
             allowClear
             enterButton="Tìm kiếm"
             size="large"
-            // onSearch={onSearch}
+            onSearch={handleSearch}
+            onChange={(e) => handleSearch(e.target.value)}
           />
         </Col>
         <Col

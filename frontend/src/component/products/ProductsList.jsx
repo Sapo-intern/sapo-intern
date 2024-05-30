@@ -9,7 +9,7 @@ import ProductApi from "../../api/products";
 const getColumns = (handleDelete) => [
   {
     title: "Mã sản phẩm",
-    dataIndex: "productsCode",
+    dataIndex: "productCode",
   },
   {
     title: "Tên",

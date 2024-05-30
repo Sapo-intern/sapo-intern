@@ -9,7 +9,7 @@ import ServiceApi from "../../api/services";
 const getColumns = (handleDelete) => [
   {
     title: "Mã dịch vụ",
-    dataIndex: "servicesCode",
+    dataIndex: "serviceCode",
   },
   {
     title: "Tên",
