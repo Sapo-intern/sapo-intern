@@ -20,6 +20,11 @@ const UserApi = {
     const url = `/users/${id}`;  
     return instance.patch(url, data, headers);
   },
+
+  searchUser(keyword, headers) {
+    const url = `/users/search?keyword=${keyword}`;
+    return instance.get(url, headers);
+  },
 };
 
 export default UserApi;
