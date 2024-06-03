@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Table(name = "vehicles")
@@ -21,19 +23,24 @@ public class Vehicle {
     @Column(name = "vehicle_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+//    @Column(unique = true)
     private String plateNumber;
     private String type;
     private String brand;
     private String color;
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
     @JsonIgnore
-    private Customer customer;
+    @OneToMany(mappedBy = "vehicle")
+    private List<Ticket> tickets = new ArrayList<>();
 
     public void setVehicle(Vehicle vehicle) {
         this.plateNumber = vehicle.plateNumber;
         this.brand = vehicle.brand;
         this.type = vehicle.type;
         this.color = vehicle.color;
+    }
+
+    public void addTicket(Ticket newTicket) {
+        newTicket.setVehicle(this);
+        tickets.add(newTicket);
     }
 }

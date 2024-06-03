@@ -62,7 +62,7 @@ const Layouts = () => {
 
   const items = [
     getItem("Trang chủ", "1", <HomeOutlined />, "/"),
-    getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/repair"),
+    getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
     getItem("Nhân viên", "3", <UserOutlined />, "/user"),
     getItem("Khách hàng", "4", <UsergroupAddOutlined />, "/customers"),
     getItem("Sản phẩm", "5", <ProductOutlined />, "/product"),

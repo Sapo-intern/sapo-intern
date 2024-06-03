@@ -23,8 +23,8 @@ public class Transaction {
     private Long id;
     @Enumerated(EnumType.ORDINAL)
     private PayMethod payMethod;
-    private int amount;
+    private double amount;
     @Enumerated(EnumType.ORDINAL)
     private TransactionStatus status;
-    private Date createdDate;
+    private String createdDate;
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sapo.intern.mock.carstore.global.response.ApiResponse;
+import sapo.intern.mock.carstore.issue.models.Issue;
 import sapo.intern.mock.carstore.ticket.dtos.AddIssueRequest;
 import sapo.intern.mock.carstore.ticket.dtos.CreateTicketRequest;
 import sapo.intern.mock.carstore.ticket.dtos.UpdateTicketRequest;
@@ -24,10 +25,17 @@ public class TicketController {
         return ResponseEntity.ok(new ApiResponse<>("1000", ticketService.getTicketList(page, size)));
     }
 
+    @GetMapping("/{ticketId}")
+    public ResponseEntity<ApiResponse<Ticket>> requestGetTicketDetail(
+            @PathVariable("ticketId") Long ticketId
+    ) {
+        return ResponseEntity.ok(new ApiResponse<>("1000", ticketService.getTicketById(ticketId)));
+    }
+
     @PostMapping("/")
     public ResponseEntity<ApiResponse<Ticket>> requestCreateTicket(
             @RequestBody CreateTicketRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>("1020", ticketService.createTicket(request.getTicket())));
+        return ResponseEntity.ok(new ApiResponse<>("1020", ticketService.createTicket(request)));
     }
 
     @DeleteMapping("/{ticketId}")
@@ -47,11 +55,11 @@ public class TicketController {
     }
 
     @PostMapping("/{ticketId}/issues/")
-    public ResponseEntity<ApiResponse<Ticket>> requestAddIssue(
+    public ResponseEntity<ApiResponse<Issue>> requestAddIssue(
             @PathVariable("ticketId") Long ticketId,
             @RequestBody AddIssueRequest request
             ) {
-        return ResponseEntity.ok(new ApiResponse<>("1020", ticketService.addIssue(ticketId, request.getIssue())));
+        return ResponseEntity.ok(new ApiResponse<>("1020", ticketService.addIssue(ticketId, request)));
     }
 
     @DeleteMapping("/{ticketId}/issues/{issueId}")
@@ -70,6 +78,19 @@ public class TicketController {
     ) {
         return ResponseEntity.ok(new ApiResponse<>("1020", ticketService.assignCustomer(ticketId, customerId)));
     }
+
+    @PostMapping("/{ticketId}/complete")
+    public ResponseEntity<ApiResponse> requestCompleteTicket(
+            @PathVariable Long ticketId) {
+        return ResponseEntity.ok(new ApiResponse("1020", ticketService.updateTicketComplete(ticketId)));
+    }
+
+    @PostMapping("/{ticketId}/cancel")
+    public ResponseEntity<ApiResponse> requestCancelTicket(
+            @PathVariable Long ticketId) {
+        return ResponseEntity.ok(new ApiResponse("1020", ticketService.updateTicketCancel(ticketId)));
+    }
+
 
 
 }

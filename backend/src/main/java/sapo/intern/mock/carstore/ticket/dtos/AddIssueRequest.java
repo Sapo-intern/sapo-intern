@@ -9,5 +9,8 @@ import sapo.intern.mock.carstore.issue.models.Issue;
 @Getter
 @Setter
 public class AddIssueRequest {
-    private Issue issue;
+    private Long serviceId;
+    private Long employeeId;
+    private Long productId;
+    private int quantity;
 }

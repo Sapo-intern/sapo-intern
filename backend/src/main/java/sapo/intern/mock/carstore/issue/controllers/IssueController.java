@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sapo.intern.mock.carstore.global.response.ApiResponse;
+import sapo.intern.mock.carstore.issue.dtos.UpdateIssueRequest;
 import sapo.intern.mock.carstore.issue.services.IssueService;
 
 @AllArgsConstructor
@@ -45,6 +46,14 @@ public class IssueController {
             @RequestParam("quantity") Integer quantity
     ) {
         return ResponseEntity.ok(new ApiResponse<>("1010", issueService.addProduct(issueId, productId, quantity)));
+    }
+
+    @PutMapping("/{issueId}/")
+    public ResponseEntity<ApiResponse> requestUpdateIssue(
+            @PathVariable Long issueId,
+            @RequestBody UpdateIssueRequest request
+    ) {
+        return ResponseEntity.ok(new ApiResponse<>("1010", issueService.updateIssue(issueId, request)));
     }
 
 
