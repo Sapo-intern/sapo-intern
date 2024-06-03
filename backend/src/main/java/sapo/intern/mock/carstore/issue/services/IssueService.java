@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sapo.intern.mock.carstore.global.exceptions.NotFoundException;
+import sapo.intern.mock.carstore.issue.dtos.UpdateIssueRequest;
+import sapo.intern.mock.carstore.issue.helper.IssueProductKey;
 import sapo.intern.mock.carstore.issue.models.*;
 import sapo.intern.mock.carstore.issue.repositories.*;
-
-import java.util.List;
+import sapo.intern.mock.carstore.user.models.User;
+import sapo.intern.mock.carstore.user.repositories.UserRepo;
 
 @AllArgsConstructor
 @Service
@@ -16,7 +18,8 @@ public class IssueService {
     private ProductRepo productRepo;
     private RepairServiceRepo serviceRepo;
     private IssueProductRepo issueProductRepo;
-    private EmployeeRepo employeeRepo;
+    private UserRepo employeeRepo;
+
     @Transactional
     public void deleteProduct(Long issueId, Long productId) {
         Issue foundIssue = issueRepo.findById(issueId).orElseThrow(() -> new NotFoundException("Không tồn tại " + issueId));
@@ -48,6 +51,26 @@ public class IssueService {
             foundIssue.setRepairService(null);
             issueRepo.save(foundIssue);
         }
+    }
+
+
+    public Issue updateIssue(Long issueId, UpdateIssueRequest request) {
+        var foundIssue = issueRepo.findById(issueId).orElseThrow(()-> new NotFoundException("Không tìm thấy issue!"));
+        var foundEmployee = employeeRepo.findById(request.getEmployeeId().toString()).orElseThrow(()-> new NotFoundException("Không tìm thấy employee!"));
+        var foundService = serviceRepo.findById(request.getServiceId()).orElseThrow(()-> new NotFoundException("Không tìm thấy service!"));
+        var foundProduct = productRepo.findById(request.getProductId()).orElseThrow(()-> new NotFoundException("Không tìm thấy product!"));
+
+        IssueProductKey issueProductKey = request.getIssueProductId();
+
+        // Find the existing IssueProduct
+        IssueProduct foundIssueProduct = issueProductRepo.findById(issueProductKey)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy issue product!"));
+
+        foundIssueProduct.setIssue(foundIssue);
+        foundIssueProduct.setProduct(foundProduct);
+        foundIssueProduct.setQuantity(request.getQuantity());
+
+        return issueRepo.save(foundIssue);
     }
 
     public RepairService addService(Long issueId, Long serviceId) {
@@ -88,17 +111,16 @@ public class IssueService {
 
     public Issue assignEmployee(Long issueId, Long employeeId) {
         Issue foundIssue = issueRepo.findById(issueId).orElseThrow(()->new NotFoundException("Không tìm thấy vấn đề!"));
-        Employee foundEmployee = employeeRepo.findById(employeeId).orElseThrow(()->new NotFoundException("Không tìm thấy nhân viên!"));
-        foundIssue.setEmployee(foundEmployee);
-        foundEmployee.setIssue(foundIssue);
+        User foundEmployee = employeeRepo.findById(employeeId.toString()).orElseThrow(()->new NotFoundException("Không tìm thấy nhân viên!"));
+        foundIssue.setUser(foundEmployee);
+        foundEmployee.addIssue(foundIssue);
         return issueRepo.save(foundIssue);
     }
 
     public Issue removeEmployee(Long issueId, Long employeeId) {
         Issue foundIssue = issueRepo.findById(issueId).orElseThrow(()->new NotFoundException("Không tìm thấy vấn đề!"));
-        Employee foundEmployee = employeeRepo.findById(employeeId).orElseThrow(()->new NotFoundException("Không tìm thấy nhân viên!"));
-        foundIssue.setEmployee(null);
-        foundEmployee.setIssue(null);
+        User foundEmployee = employeeRepo.findById(employeeId.toString()).orElseThrow(()->new NotFoundException("Không tìm thấy nhân viên!"));
+        foundEmployee.removeIssue(foundIssue);
         return issueRepo.save(foundIssue);
     }
 }

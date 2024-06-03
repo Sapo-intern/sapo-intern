@@ -1,5 +1,6 @@
 package sapo.intern.mock.carstore.ticket.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -33,28 +34,18 @@ public class Customer {
     @Email
     private String email;
     private String address;
+    @JsonIgnore
     @OneToMany(mappedBy = "customer")
     private List<Ticket> tickets = new ArrayList<>();
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            mappedBy = "customer")
-    private List<Vehicle> vehicles = new ArrayList<>();
-
-    public void removeVehicle(Vehicle customerVehicle) {
-        vehicles.remove(customerVehicle);
-        customerVehicle.setCustomer(null);
-    }
-
-    public void addVehicle(Vehicle vehicle) {
-        vehicles.add(vehicle);
-        vehicle.setCustomer(this);
-    }
 
     public void setCustomer(Customer customer) {
         this.email = customer.email;
         this.name = customer.name;
         this.phoneNumber = customer.phoneNumber;
+    }
+
+    public void addTicket(Ticket newTicket) {
+        newTicket.setCustomer(this);
+        tickets.add(newTicket);
     }
 }

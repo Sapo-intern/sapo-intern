@@ -1,6 +1,7 @@
 package sapo.intern.mock.carstore.ticket.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,13 +29,16 @@ public class Ticket {
     private Date createdDate = new Date(System.currentTimeMillis());
     private Date completeDate;
     private double totalAmount;
-    @OneToMany(mappedBy = "ticket")
+    @OneToMany(mappedBy = "ticket", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Issue> issues = new ArrayList<>();
     @Enumerated(EnumType.ORDINAL)
     private TicketStatus status = TicketStatus.PENDING;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
+    @ManyToOne
+    @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id")
+    private Vehicle vehicle;
 
 
     public void addIssue(Issue issue) {

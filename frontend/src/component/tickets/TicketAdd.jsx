@@ -17,6 +17,9 @@ import UserApi from "../../api/user";
 import { CustomerApi } from "../../api/customer";
 import { ServiceApi } from "../../api/service";
 import { ProductApi } from "../../api/product";
+import instance from "../../api/instance";
+import { TicketApi } from "../../api/ticket";
+import { VehicleApi } from "../../api/vehicle";
 
 const TicketAdd = () => {
   const formItemLayout = {
@@ -66,11 +69,9 @@ const TicketAdd = () => {
 
   const fetchData = async () => {
     const fetchUsersResponse = await UserApi.getAll(0, 1000);
-    const fetchCustomerResponse = await CustomerApi.getAll(0, 1000);
     const fetchServiceResponse = await ServiceApi.getAll(0, 1000);
     const fetchProductResponse = await ProductApi.getAll(0, 1000);
 
-    setCustomers(fetchCustomerResponse.data);
     setEmployees(fetchUsersResponse.content);
     setProducts(fetchProductResponse.content);
     setServices(fetchServiceResponse.content);
@@ -80,8 +81,11 @@ const TicketAdd = () => {
     fetchData();
   }, []);
 
-  const handleFormChange = (value, field) => {
+  const handleFormChange = async (value, field) => {
     if (field === "phoneNumber") {
+      const fetchCustomerResponse = await CustomerApi.getAll(0, 1000);
+      setCustomers(fetchCustomerResponse.data);
+
       let customerExisted = false;
       for (const customer of customers) {
         if (customer.phoneNumber === value) {
@@ -95,13 +99,44 @@ const TicketAdd = () => {
         form.setFieldValue(["customer", "id"], null);
       }
       form.setFieldValue(["customer", "phoneNumber"], value);
+    } else if (field === "plateNumber") {
+      const fetchVehicleResponse = await VehicleApi.getByPlateNumber(value);
+      setVehicles(fetchVehicleResponse.data);
+      let customerExisted = false;
+      for (const vehicle of vehicles) {
+        if (vehicle.plateNumber === value) {
+          form.setFieldValue(["vehicle", "color"], vehicle.color);
+          form.setFieldValue(["vehicle", "brand"], vehicle.brand);
+          form.setFieldValue(["vehicle", "type"], vehicle.type);
+          customerExisted = true;
+        }
+      }
+      if (!vehicleExisted) {
+        form.setFieldValue(["vehicle", "id"], null);
+      }
+      form.setFieldValue(["vehicle", "plateNumber"], value);
     } else {
       form.setFieldValue(field, value);
     }
     console.log(form.getFieldsValue());
   };
 
-  const handleSaveForm = () => {};
+  const handleSaveForm = async () => {
+    try {
+      // Get data from form
+      const customer = form.getFieldValue("customer");
+      const vehicle = form.getFieldValue("vehicle");
+      const issues = form.getFieldValue("issues");
+      // Create ticket base on issues and customer;
+      await TicketApi.createTicket(customer, vehicle, issues);
+      console.log(Object.keys(form.getFieldsValue()));
+      form.resetFields(Object.keys(form.getFieldsValue()));
+      alert("Create success!");
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
+  };
 
   return (
     <>
@@ -328,6 +363,24 @@ const TicketAdd = () => {
                         />
                       </Form.Item>
                     </Col>
+                    <Col span={8}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "quantity"]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Missing first name",
+                          },
+                        ]}
+                      >
+                        <Input
+                          type="number"
+                          placeholder="Số lượng"
+                          onChange={(e) => handleFormChange(e, "quantity")}
+                        />
+                      </Form.Item>
+                    </Col>
                   </Row>
                   <Form.Item
                     {...restField}
@@ -365,14 +418,18 @@ const TicketAdd = () => {
         <Row>
           <Col>
             <Form.Item {...tailFormItemLayout} style={{ display: "flex" }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" onClick={handleSaveForm}>
                 Thêm
               </Button>
             </Form.Item>
           </Col>
           <Col>
             <Form.Item {...tailFormItemLayout} style={{ display: "flex" }}>
-              <Button type="primary" htmlType="button">
+              <Button
+                type="primary"
+                htmlType="button"
+                onClick={(e) => navigate("/ticket")}
+              >
                 Quay lại
               </Button>
             </Form.Item>
