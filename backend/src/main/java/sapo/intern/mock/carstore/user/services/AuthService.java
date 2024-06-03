@@ -77,15 +77,18 @@ public class AuthService {
             throw new AppException(ErrorCode.EMAIL_NOT_FOUND);
         }
 
-        boolean authenticated = passwordEncoder.matches(request.getPassword(),
-                user.getPassword());
+        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
-        if (!authenticated)
+        if (!authenticated) {
             throw new AppException(ErrorCode.INVALID_PASSWORD);
-//        var token = generateToken(user);
-        var token = generateToken(user.getEmail(), user.getRole());
+        }
+
+        var token = generateToken(user.getEmail(), user.getRole(), 3600000);
+        var refreshToken = generateRefreshToken(user.getEmail(), user.getRole());
+
         return LoginResponse.builder()
                 .token(token)
+                .refreshToken(refreshToken)
                 .id(user.getId())
                 .name(user.getName())
                 .phone(user.getPhone())
@@ -179,14 +182,14 @@ public class AuthService {
         userRepo.save(user);
     }
 
-    private String generateToken(String username, UserRole role) {
+    private String generateToken(String username, UserRole role, long expiryDuration) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(username)
                 .issuer("quý")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+                .expirationTime(new Date(Instant.now().plus(expiryDuration, ChronoUnit.MILLIS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", role.name())
                 .build();
@@ -203,6 +206,13 @@ public class AuthService {
             throw new RuntimeException(e);
         }
     }
+
+    private String generateRefreshToken(String username, UserRole role) {
+//        long refreshTokenExpiryDuration = 7 * 24 * 60 * 60 * 1000;
+        long refreshTokenExpiryDuration = 3600000;
+        return generateToken(username,role, refreshTokenExpiryDuration);
+    }
+
 
     public void logout(LogoutRequest request) throws JOSEException, ParseException {
         var signToken = verifyToken(request.getToken());
@@ -251,8 +261,4 @@ public class AuthService {
                 .valid(isValid)
                 .build();
     }
-
-
-
-
 }

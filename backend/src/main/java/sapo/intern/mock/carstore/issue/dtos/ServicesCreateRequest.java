@@ -26,7 +26,6 @@ public class ServicesCreateRequest {
     @NotNull
     @DecimalMin(value = "0.0", inclusive = false, message = "Giá phải là số và lớn hơn 1")
     Double price;
-    String urlImage;
 
     @NotNull
     String description;

@@ -13,14 +13,15 @@ import sapo.intern.mock.carstore.user.enums.UserRole;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginResponse {
     String token;
-    private Long id;
-    private String name;
-    private String phone;
-    private String email;
-    private String address;
-    private Integer age;
-    private String urlImage;
-    private boolean firstLogin;
+    String refreshToken;
+    Long id;
+    String name;
+    String phone;
+    String email;
+    String address;
+    Integer age;
+    String urlImage;
+    boolean firstLogin;
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    UserRole role;
 }
