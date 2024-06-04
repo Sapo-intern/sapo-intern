@@ -1,6 +1,7 @@
 package sapo.intern.mock.carstore.ticket.controllers;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sapo.intern.mock.carstore.global.response.ApiResponse;
@@ -22,30 +23,6 @@ public class CustomerController {
 
     private CustomerService customerService;
 
-    /**/
-    /*Api for customer*/
-    /**/
-
-    @PostMapping("/")
-    public ResponseEntity<ApiResponse<Customer>> requestCreateCustomer(
-            @RequestBody CreateCustomerRequest request) {
-        return ResponseEntity.ok(new ApiResponse("1010", customerService.createCustomer(request.getCustomer())));
-    }
-
-    @PutMapping("/{customerId}")
-    public ResponseEntity<ApiResponse<Customer>> requestUpdateCustomer(
-            @PathVariable("customerId") Long customerId,
-            @RequestBody UpdateCustomerRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>("1020", customerService.updateCustomer(customerId, request.getCustomer())));
-    }
-
-    @DeleteMapping("/{customerId}")
-    public ResponseEntity<ApiResponse<String>> requestDeleteCustomer(
-            @PathVariable("customerId") Long customerId) {
-        customerService.deleteCustomer(customerId);
-        return ResponseEntity.ok(new ApiResponse<>("1030", "Xóa khách hàng thành công!"));
-    }
-
     @GetMapping("/")
     public ResponseEntity<ApiResponse<List<Customer>>> requestGetCustomerList(
             @RequestParam("page") Integer page,
@@ -54,39 +31,24 @@ public class CustomerController {
         return ResponseEntity.ok(new ApiResponse<>("1000", customerService.getCustomerList(page, size)));
     }
 
-
-    /**/
-    /*Api for vehicle*/
-    /**/
-    @GetMapping("/{customerId}/vehicles/")
-    public ResponseEntity<ApiResponse<List<Vehicle>>> requestGetCustomerVehicles(
-            @PathVariable("customerId") Long customerId
-    ) {
-        return ResponseEntity.ok(new ApiResponse<>("1000", customerService.getVehicles(customerId)));
+    @GetMapping("/{customerId}")
+    public ResponseEntity<ApiResponse<Customer>> requestGetCustomersDetail(@PathVariable Long customerId) {
+        return ResponseEntity.ok(new ApiResponse("1000", customerService.getCustomerDetail(customerId)));
     }
 
-    @PostMapping("/{customerId}/vehicles/")
-    public ResponseEntity<ApiResponse<Vehicle>> requestCreateVehicle(
+    @PostMapping("/")
+    public ResponseEntity<ApiResponse<Customer>> requestCreateCustomer(
+            @RequestBody CreateCustomerRequest request) {
+        return ResponseEntity.ok(new ApiResponse("1010", customerService.createCustomer(request.getCustomer())));
+    }
+
+    @PutMapping("/{customerId}/")
+    public ResponseEntity<ApiResponse<Customer>> requestUpdateCustomer(
             @PathVariable("customerId") Long customerId,
-            @RequestBody CreateVehicleRequest request) {
-        return ResponseEntity.ok(new ApiResponse("1010", customerService.createVehicle( customerId, request.getVehicle())));
+            @RequestBody UpdateCustomerRequest request) {
+        return ResponseEntity.ok(new ApiResponse<>("1020", customerService.updateCustomer(customerId, request.getCustomer())));
     }
 
-    @PutMapping("/{customerId}/vehicles/{vehicleId}")
-    public ResponseEntity<ApiResponse<Vehicle>> requestUpdateVehicle(
-            @PathVariable("customerId") Long customerId,
-            @PathVariable("vehicleId") Long vehicleId,
-            @RequestBody UpdateVehicleRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>("1020", customerService.updateVehicle(customerId, vehicleId, request.getVehicle())));
-    }
-
-    @DeleteMapping("/{customerId}/vehicles/{vehicleId}")
-    public ResponseEntity<ApiResponse<String>> requestDeleteVehicle(
-            @PathVariable("customerId") Long customerId,
-            @PathVariable("vehicleId") Long vehicleId) {
-        customerService.deleteVehicle(customerId, vehicleId);
-        return ResponseEntity.ok(new ApiResponse<>("1030", "Xóa phương tiện thành công!"));
-    }
 
     /**/
     /*Exception handler*/

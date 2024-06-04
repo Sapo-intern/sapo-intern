@@ -1,5 +1,6 @@
 package sapo.intern.mock.carstore.issue.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -25,8 +26,10 @@ public class Product {
     private String description;
     /*Mnh giá theo .000 vnđ */
     private Double unitPrice;
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<StorageTransaction> transactions;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<IssueProduct> issueProducts;
 }

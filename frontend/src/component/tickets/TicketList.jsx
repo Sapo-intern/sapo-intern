@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Row, Table } from "antd";
 import Search from "antd/es/transfer/search";
 import { Link } from "react-router-dom";
 import { useTicketColumns } from "./table/useTicketColumns";
+import { TicketApi } from "../../api/ticket";
+import { useTickets } from "./hooks/useTickets";
 
 const TicketList = () => {
+  const { tickets, cancleTicket, completeTicket } = useTickets();
+
   return (
     <div>
       <h1>Phiếu sửa chữa</h1>
@@ -30,7 +34,12 @@ const TicketList = () => {
           </Link>
         </Col>
       </Row>
-      <Table columns={useTicketColumns()} dataSource={[]} onChange={null} />;
+      <Table
+        columns={useTicketColumns(cancleTicket, completeTicket)}
+        dataSource={tickets}
+        onChange={null}
+      />
+      ;
     </div>
   );
 };

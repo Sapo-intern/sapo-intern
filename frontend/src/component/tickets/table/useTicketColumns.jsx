@@ -1,4 +1,8 @@
-export const useTicketColumns = () => {
+import { Button, Space } from "antd";
+import { useNavigate } from "react-router-dom";
+
+export const useTicketColumns = (cancleTicket, completeTicket) => {
+  const navigate = useNavigate();
   return [
     {
       title: "Id",
@@ -6,7 +10,7 @@ export const useTicketColumns = () => {
     },
     {
       title: "Mô tả",
-      dataIndex: "Description",
+      dataIndex: "description",
     },
     {
       title: "Ngày tạo",
@@ -24,19 +28,28 @@ export const useTicketColumns = () => {
       title: "Trạng thái",
       dataIndex: "status",
     },
-    {
-      title: "Số lượng vấn đề",
-      dataIndex: "status",
-    },
-
+    // {
+    //   title: "Số lượng vấn đề",
+    //   dataIndex: "status",
+    // },
     {
       title: "Action",
       key: "action",
-      render: () => (
+      render: (option) => (
         <Space size="middle">
-          <Button type="primary">Xem chi tiết</Button>
-          <Button danger>Xóa</Button>
-          <Button>Sửa</Button>
+          <Button
+            onClick={() => {
+              console.log(option);
+              navigate(`/ticket/${option.id}`);
+            }}
+            type="primary"
+          >
+            Xem chi tiết
+          </Button>
+          <Button disabled={option.status !== 'PENDING'}  onClick={() => cancleTicket(option.id)} danger>
+            Hủy
+          </Button>
+          <Button disabled={option.status !== 'PENDING'} onClick={() => completeTicket(option.id)}>Hoàn thành</Button>
         </Space>
       ),
     },

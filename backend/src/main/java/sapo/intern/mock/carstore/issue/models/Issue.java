@@ -1,5 +1,6 @@
 package sapo.intern.mock.carstore.issue.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -8,8 +9,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sapo.intern.mock.carstore.issue.enums.IssueStatus;
+import sapo.intern.mock.carstore.ticket.dtos.CreateIssueDto;
 import sapo.intern.mock.carstore.ticket.models.Ticket;
+import sapo.intern.mock.carstore.user.models.User;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,20 +31,21 @@ public class Issue {
     private String description;
     @Min(0)
     @Max(100)
-    private int progress;
+    private int progress = 0;
     @Enumerated(EnumType.ORDINAL)
-    private IssueStatus status;
+    private IssueStatus status = IssueStatus.PENDING;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "issue", orphanRemoval = true)
-    private List<IssueProduct> issueProducts;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "issue", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<IssueProduct> issueProducts = new ArrayList<>();
+    @ManyToOne
     @JoinColumn(name = "service_id", referencedColumnName = "service_id")
     private RepairService repairService;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
-    private Employee employee;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     public void setProgress(int progress) {
         if (progress == 100) this.status = IssueStatus.COMPLETE;
@@ -75,5 +80,11 @@ public class Issue {
             }
         }
     }
+
+    public void addIssueProduct(IssueProduct newIssueProduct) {
+        newIssueProduct.setIssue(this);
+        issueProducts.add(newIssueProduct);
+    }
+
 
 }

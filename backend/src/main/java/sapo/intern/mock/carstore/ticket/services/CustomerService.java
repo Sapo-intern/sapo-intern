@@ -23,12 +23,9 @@ public class CustomerService {
     }
 
     public Customer updateCustomer(Long customerId, Customer customer) {
-        Customer foundCustomer = customerRepo.findById(customerId).orElse(null);
-        if (foundCustomer == null) {
-            throw new NotFoundException("Không tồn tại khách hàng " +  customer.getId().toString());
-        }
+        Customer foundCustomer = customerRepo.findById(customerId).orElseThrow(()->new NotFoundException("Không tồn tại khách hàng " +  customer.getId().toString()));
         foundCustomer.setCustomer(customer);
-        return foundCustomer;
+        return customerRepo.save(foundCustomer);
     }
 
     public List<Customer> getCustomerList(Integer page, Integer size) {
@@ -44,61 +41,10 @@ public class CustomerService {
         if (foundCustomer == null) {
             throw new NotFoundException("Không tồn tại khách hàng " + customerId);
         }
-        foundCustomer.addVehicle(vehicle);
         return vehicleRepo.save(vehicle);
     }
 
-    public Vehicle updateVehicle(Long customerId, Long vehicleId, Vehicle vehicle) {
-        Customer foundCustomer = customerRepo.findById(customerId).orElse(null);
-        if (foundCustomer == null) {
-            throw new NotFoundException("Không tồn tại khách hàng " + customerId);
-        }
-        Vehicle customerVehicle = foundCustomer.getVehicles()
-                .stream().filter(iVehicle -> Objects.equals(iVehicle.getId(), vehicleId))
-                .toList().getFirst();
-        if (customerVehicle == null){
-            throw new NotFoundException("Không tồn tại phương tiện trong khách hàng");
-        } else {
-            customerVehicle.setVehicle(vehicle);
-            return vehicleRepo.save(customerVehicle);
-        }
-    }
-
-    @Transactional
-    public void deleteCustomer(Long customerId) {
-        if (customerRepo.findById(customerId).orElse(null) == null) {
-            throw new NotFoundException("Không tồn tại khách hàng " + customerId);
-        }
-        customerRepo.deleteById(customerId);
-    }
-
-    @Transactional
-    public void deleteVehicle(Long customerId, Long vehicleId) {
-        Customer foundCustomer = customerRepo.findById(customerId).orElse(null);
-        Vehicle foundVehicle = vehicleRepo.findById(vehicleId).orElse(null);
-        if (foundCustomer == null) {
-            throw new NotFoundException("Không tồn tại khách hàng " + customerId);
-        } else if (foundVehicle == null) {
-            throw new NotFoundException("Không tồn tại phương tiện " + vehicleId);
-        }
-        List<Vehicle> customerVehicles = foundCustomer.getVehicles();
-        if (customerVehicles.isEmpty()){
-            throw new NotFoundException("Khách hàng không có phương tiện");
-        } else if (!foundCustomer.getVehicles()
-                .stream().map(Vehicle::getId).toList()
-                .contains(vehicleId)) {
-            throw new NotFoundException("Không tồn tại phương tiện trong khách hàng " + customerId);
-        } else {
-            foundCustomer.removeVehicle(foundVehicle);
-            customerRepo.save(foundCustomer);
-        }
-    }
-
-    public List<Vehicle> getVehicles(Long customerId) {
-        Customer foundCustomer = customerRepo.findById(customerId).orElse(null);
-        if (foundCustomer == null) {
-            throw new NotFoundException("Không tồn tại khách hàng " + customerId);
-        }
-        return foundCustomer.getVehicles();
+    public Customer getCustomerDetail(Long customerId) {
+        return customerRepo.findById(customerId).orElseThrow(()-> new NotFoundException("Không tồn tại khách hàng " + customerId));
     }
 }
