@@ -3,7 +3,6 @@ import { Button, Col, Row, Space, Table, Input, Pagination } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 const { Search } = Input;
-import { useAuth } from "../../Context/ContextAuth";
 import ServiceApi from "../../api/services";
 
 const getColumns = (handleDelete) => [
@@ -28,8 +27,12 @@ const getColumns = (handleDelete) => [
     key: "action",
     render: (text, record) => (
       <Space size="middle">
-        <Button danger onClick={() => handleDelete(record.id)}>Xóa</Button>
-        <Button><Link to={`/product/${record.id}`}>Sửa</Link></Button>
+        <Button danger onClick={() => handleDelete(record.id)}>
+          Xóa
+        </Button>
+        <Button>
+          <Link to={`/services/${record.id}`}>Sửa</Link>
+        </Button>
       </Space>
     ),
   },
@@ -40,16 +43,11 @@ const ServicesList = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
-  const { token } = useAuth();
   const navigate = useNavigate();
 
   const fetchServices = async (page, size) => {
     try {
-      const response = await ServiceApi.getAllService(page, size, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await ServiceApi.getAllService(page, size);
       setServices(response.content);
       setTotalItems(response.totalElements);
     } catch (error) {
@@ -59,11 +57,7 @@ const ServicesList = () => {
 
   const searchSearch = async (name) => {
     try {
-      const response = await ServiceApi.searchService(name, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await ServiceApi.searchService(name);
       setServices(response);
     } catch (error) {
       console.error("Không tìm thấy sản phẩm:", error);
@@ -92,11 +86,7 @@ const ServicesList = () => {
       });
 
       if (result.isConfirmed) {
-        await ServiceApi.deleteService(id, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await ServiceApi.deleteService(id);
         Swal.fire("Đã xóa!", "Dịch vụ đã được xóa.", "success").then(() =>
           navigate("/services")
         );

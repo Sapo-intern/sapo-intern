@@ -60,21 +60,33 @@ const Layouts = () => {
     };
   }
 
-  const items = [
-    getItem("Trang chủ", "1", <HomeOutlined />, "/"),
-    getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
-    getItem("Nhân viên", "3", <UserOutlined />, "/user"),
-    getItem("Khách hàng", "4", <UsergroupAddOutlined />, "/customers"),
-    getItem("Sản phẩm", "5", <ProductOutlined />, "/product"),
-    getItem("Dịch vụ", "6", <SettingOutlined />, "/services"),
-    getItem(
-      "Thông tin cá nhân",
-      "7",
-      <ProfileOutlined />,
-      user ? `/user/${user.id}` : "/"
-    ),
-    getItem("Đăng xuất", "8", <LogoutOutlined />),
-  ];
+  const items = user && user.role === "MANAGER"
+  ? [
+      getItem("Trang chủ", "1", <HomeOutlined />, "/"),
+      getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/repair"),
+      getItem("Nhân viên", "3", <UserOutlined />, "/user"),
+      getItem("Khách hàng", "4", <UsergroupAddOutlined />, "/customers"),
+      getItem("Sản phẩm", "5", <ProductOutlined />, "/product"),
+      getItem("Dịch vụ", "6", <SettingOutlined />, "/services"),
+      getItem(
+        "Thông tin cá nhân",
+        "7",
+        <ProfileOutlined />,
+        user ? `/user/${user.id}` : "/"
+      ),
+      getItem("Đăng xuất", "8", <LogoutOutlined />),
+    ]
+  : [
+      getItem("Trang chủ", "1", <HomeOutlined />, "/"),
+      getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/repair"),
+      getItem(
+        "Thông tin cá nhân",
+        "7",
+        <ProfileOutlined />,
+        user ? `/user/${user.id}` : "/"
+      ),
+      getItem("Đăng xuất", "8", <LogoutOutlined />),
+    ];
 
   return (
     <Layout
