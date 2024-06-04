@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import UserApi from "../../api/user";
 const { Search } = Input;
-import { useAuth } from "../../Context/ContextAuth";
 const getColumns = (handleDelete) => [
   {
     title: "Tên",
@@ -20,6 +19,13 @@ const getColumns = (handleDelete) => [
     dataIndex: "age",
     sorter: (a, b) => a.age - b.age,
   },
+  // {
+  //   title: "Hình ảnh",
+  //   dataIndex: "urlImage",
+  //   render: (urlImage) => (
+  //     <img src={urlImage} style={{ width: 180, height: 180 }} />
+  //   ),
+  // },
   {
     title: "Địa chỉ",
     dataIndex: "address",
@@ -62,8 +68,12 @@ const getColumns = (handleDelete) => [
     key: "action",
     render: (text, record) => (
       <Space size="middle">
-        <Button danger onClick={() => handleDelete(record.id)}>Xóa</Button>
-        <Button>Sửa</Button>
+        <Button danger onClick={() => handleDelete(record.id)}>
+          Xóa
+        </Button>
+        <Button>
+          <Link to={`/user/${record.id}`}>Sửa</Link>
+        </Button>
       </Space>
     ),
   },
@@ -74,18 +84,11 @@ const UserList = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
-  const { token } = useAuth();
   const navigate = useNavigate();
 
   const fetchUser = async (page, size) => {
     try {
-      const response = await UserApi.getAll(page, size, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await UserApi.getAll(page, size);
       setUser(response.content);
       setTotalItems(response.totalElements);
     } catch (error) {
@@ -95,11 +98,7 @@ const UserList = () => {
 
   const searchUser = async (keyword) => {
     try {
-      const response = await UserApi.searchUser(keyword, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await UserApi.searchUser(keyword);
       setUser(response.result);
     } catch (error) {
       console.error("Không tìm thấy nhân viên:", error);
@@ -109,7 +108,7 @@ const UserList = () => {
   useEffect(() => {
     fetchUser(currentPage, pageSize);
   }, [currentPage, pageSize]);
-  
+
   const handlePageChange = (page, pageSize) => {
     setCurrentPage(page - 1);
     setPageSize(pageSize);
@@ -126,13 +125,9 @@ const UserList = () => {
         cancelButtonColor: "#3085d6",
         confirmButtonText: "Xóa",
       });
-  
+
       if (result.isConfirmed) {
-        await UserApi.delete(id, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await UserApi.delete(id);
         Swal.fire("Đã xóa!", "Nhân viên đã được xóa.", "success").then(() =>
           navigate("/user")
         );
@@ -187,7 +182,7 @@ const UserList = () => {
         dataSource={user.map((item) => ({
           ...item,
           key: item.id,
-          name: item.name
+          name: item.name,
         }))}
         pagination={false}
         // onChange={onChange}

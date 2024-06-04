@@ -3,23 +3,17 @@ import Swal from "sweetalert2";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ProductApi from "../../api/products";
-import { useAuth } from "../../Context/ContextAuth";
 
 const ProductEdit = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const { token } = useAuth();
   const { id } = useParams();
   const [form] = Form.useForm();
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await ProductApi.getOneProduct(id, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await ProductApi.getOneProduct(id);
         const productData = response.result;
         setProduct(productData);
 
@@ -38,19 +32,11 @@ const ProductEdit = () => {
     };
 
     fetchProduct();
-  }, [id, token, form]);
+  }, [id, form]);
 
   const handleSubmit = async (values) => {
     try {
-      await ProductApi.updateProduct(
-        id,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await ProductApi.updateProduct(id, values);
 
       Swal.fire({
         title: "Success!",

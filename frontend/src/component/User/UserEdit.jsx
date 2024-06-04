@@ -1,24 +1,18 @@
-import { Button, Form, Input } from "antd";
+import { Button, Col, Form, Input, Row } from "antd";
 import Swal from "sweetalert2";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UserApi from "../../api/user";
-import { useAuth } from "../../Context/ContextAuth";
 
 const UserEdit = () => {
   const [user, setUser] = useState(null);
-  const { token } = useAuth();
   const { id } = useParams();
   const [form] = Form.useForm();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await UserApi.getOneUser(id, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await UserApi.getOneUser(id);
         const userData = response.result;
         setUser(userData);
 
@@ -37,15 +31,11 @@ const UserEdit = () => {
     };
 
     fetchUser();
-  }, [id, token, form]);
+  }, [id, form]);
 
   const handleSubmit = async (values) => {
     try {
-      await UserApi.editUser(id, values, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await UserApi.editUser(id, values);
 
       Swal.fire({
         title: "Success!",
@@ -84,10 +74,12 @@ const UserEdit = () => {
         }}
         style={{
           maxWidth: 600,
+          margin: "0 auto",
         }}
         onFinish={handleSubmit}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
+        layout="vertical"
       >
         <Form.Item label="Tên " name="name">
           <Input />
@@ -108,13 +100,8 @@ const UserEdit = () => {
         <Form.Item label="Nhân viên" name="role">
           <Input disabled />
         </Form.Item>
-        <Form.Item style={{ display: "flex", marginRight: 12 }}>
-          <Button type="primary" htmlType="submit">
-            Lưu
-          </Button>
-        </Form.Item>
 
-        {/* <Row>
+        <Row>
           <Col>
             <Form.Item style={{ display: "flex", marginRight: 12 }}>
               <Button type="primary" htmlType="submit">
@@ -125,11 +112,11 @@ const UserEdit = () => {
           <Col>
             <Form.Item style={{ display: "flex" }}>
               <Button type="primary">
-                <Link to="/service">Quay lại</Link>
+                <Link to="/user">Quay lại</Link>
               </Button>
             </Form.Item>
           </Col>
-        </Row> */}
+        </Row>
       </Form>
     </>
   );

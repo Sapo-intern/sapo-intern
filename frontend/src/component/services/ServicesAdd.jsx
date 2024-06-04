@@ -2,7 +2,6 @@ import { Button, Col, Form, Input, Row } from "antd";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useAuth } from "../../Context/ContextAuth";
 import ServiceApi from "../../api/services";
 
 const ServicesAdd = () => {
@@ -11,32 +10,24 @@ const ServicesAdd = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
-  const { token } = useAuth();
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
 
-      await ServiceApi.addService(
-        {
-          servicesCode,
-          name,
-          price,
-          description,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await ServiceApi.addService({
+        servicesCode,
+        name,
+        price,
+        description,
+      });
 
       Swal.fire({
         title: "Success!",
         text: "Thêm dịch vụ thành công",
         icon: "success",
         confirmButtonText: "OK",
-      }).then(() => navigate("/service"));
+      }).then(() => navigate("/services"));
     } catch (error) {
       Swal.fire({
         title: "Error!",

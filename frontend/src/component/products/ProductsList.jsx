@@ -3,7 +3,6 @@ import { Button, Col, Row, Space, Table, Input, Pagination } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 const { Search } = Input;
-import { useAuth } from "../../Context/ContextAuth";
 import ProductApi from "../../api/products";
 
 const getColumns = (handleDelete) => [
@@ -44,16 +43,11 @@ const ProductList = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
-  const { token } = useAuth();
   const navigate = useNavigate();
 
   const fetchProducts = async (page, size) => {
     try {
-      const response = await ProductApi.getAllProducts(page, size, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await ProductApi.getAllProducts(page, size);
       setProducts(response.content);
       setTotalItems(response.totalElements);
     } catch (error) {
@@ -63,11 +57,7 @@ const ProductList = () => {
 
   const searchSearch = async (name) => {
     try {
-      const response = await ProductApi.searchProduct(name, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await ProductApi.searchProduct(name);
       setProducts(response);
     } catch (error) {
       console.error("Không tìm thấy sản phẩm:", error);
@@ -96,11 +86,7 @@ const ProductList = () => {
       });
 
       if (result.isConfirmed) {
-        await ProductApi.deleteProduct(id, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await ProductApi.deleteProduct(id);
         Swal.fire("Đã xóa!", "Sản phẩm đã được xóa.", "success").then(() =>
           navigate("/product")
         );

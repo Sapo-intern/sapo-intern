@@ -18,6 +18,7 @@ const Login = () => {
         password: data.password,
       });
 
+      // onLoginSuccess(response.result.token,response.result.refreshToken,response.result);
       onLoginSuccess(response.result.token,response.result);
 
       Swal.fire({

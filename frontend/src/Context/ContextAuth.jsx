@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import auth from '../api/auth';
+import { createContext, useContext, useEffect, useState } from "react";
+import auth from "../api/auth";
 
 const AuthContext = createContext();
 
@@ -20,11 +20,11 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       const response = await auth.logout({
-        token: token
-      })
+        token: token,
+      });
       if (response.code === 1000) {
         setToken(null);
-        setUser(null)
+        setUser(null);
         localStorage.removeItem("token");
         localStorage.removeItem("user");
       }
@@ -55,8 +55,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };

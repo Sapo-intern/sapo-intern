@@ -74,6 +74,7 @@ const UserAdd = () => {
         }}
         style={{
           maxWidth: 600,
+          // margin: "0 auto"
         }}
         initialValues={{
           remember: true,
@@ -81,6 +82,7 @@ const UserAdd = () => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
+        layout="vertical"
       >
 
         <Form.Item
@@ -112,7 +114,7 @@ const UserAdd = () => {
         >
           <Select
             style={{
-              width: 120,
+              width: 400,
             }}
             placeholder="Chọn quyền"
             // onChange={handleChange}
@@ -121,7 +123,7 @@ const UserAdd = () => {
           />
         </Form.Item>
 
-        <Row>
+        <Row >
           <Col>
             <Form.Item style={{ display: "flex", marginRight: 12 }}>
               <Button type="primary" htmlType="submit" onClick={handleSubmit}>

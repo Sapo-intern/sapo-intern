@@ -3,35 +3,26 @@ import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ProductApi from "../../api/products";
-import { useAuth } from "../../Context/ContextAuth";
 
 const ProductsAdd = () => {
   const navigate = useNavigate();
-  const [productsCode, setProductsCode] = useState("");
+  const [productCode, setProductCode] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const [description, setDescription] = useState("");
-  const { token } = useAuth();
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
 
-      await ProductApi.addProduct(
-        {
-          productsCode,
-          name,
-          price,
-          quantity,
-          description,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await ProductApi.addProduct({
+        productCode,
+        name,
+        price,
+        quantity,
+        description,
+      });
 
       Swal.fire({
         title: "Success!",
@@ -89,8 +80,8 @@ const ProductsAdd = () => {
           ]}
         >
           <Input
-            value={productsCode}
-            onChange={(e) => setProductsCode(e.target.value)}
+            value={productCode}
+            onChange={(e) => setProductCode(e.target.value)}
           />
         </Form.Item>
 
@@ -126,7 +117,7 @@ const ProductsAdd = () => {
 
         <Form.Item
           label="Số lượng sản phẩm"
-          name="price"
+          name="quantity"
           rules={[
             {
               required: true,
