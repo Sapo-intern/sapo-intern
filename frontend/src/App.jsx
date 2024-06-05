@@ -20,6 +20,7 @@ import TicketList from "./component/tickets/TicketList";
 import TicketAdd from "./component/tickets/TicketAdd";
 import TicketDetail from "./component/tickets/TicketDetail";
 import { ToastContainer } from "react-toastify";
+import CustomersList from "./component/customers/CustomersList";
 
 const App = () => {
   return (
@@ -52,6 +53,7 @@ const App = () => {
             <Route path="ticket/add" element= {<TicketAdd/>}/>
             <Route path="ticket/:id" element= {<TicketDetail/>}/>
 
+            <Route path="customers" element= {<CustomersList/>}/>
           </Route>
         </Route>
         <Route path="/error" element={<NotFound />} />
