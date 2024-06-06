@@ -1,13 +1,13 @@
 package sapo.intern.mock.carstore.user.services;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sapo.intern.mock.carstore.global.exceptions.AppException;
@@ -27,7 +27,6 @@ public class UserService {
     UserRepo userRepo;
     private final Cloudinary cloudinary;
 
-//    @PreAuthorize("hasRole('MANAGER')")
     public Page<User> getAllUser(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepo.findAll(pageable);
@@ -41,18 +40,16 @@ public class UserService {
     public void deleteUser(String userId){
         userRepo.deleteById(userId);
     }
-
     public User updateUser(String userId, UserUpdateRequest request, MultipartFile imageFile) {
         User user = getUser(userId);
 
-//        user.setUsername(request.getUsername());
         user.setName(request.getName());
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
         user.setAge(request.getAge());
 
         if (imageFile != null) {
-            String imageUrl = upload(imageFile);
+            String imageUrl = uploadImage(imageFile);
             user.setUrlImage(imageUrl);
         }
 
@@ -75,6 +72,15 @@ public class UserService {
             return (String) uploadResult.get("url");
         } catch (IOException io) {
             throw new RuntimeException("Image upload failed", io);
+        }
+    }
+
+    public String uploadImage(MultipartFile file) {
+        try {
+            Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            return (String) uploadResult.get("url");
+        } catch (IOException e) {
+            throw new RuntimeException("Image upload failed", e);
         }
     }
 

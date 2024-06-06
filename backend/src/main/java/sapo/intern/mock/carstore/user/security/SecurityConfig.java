@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {"/register","/logout-user",
-            "/forgot-password", "/reset-password", "/change-password" ,"/login", "/introspect"
+            "/forgot-password", "/reset-password", "/change-password" ,"/login", "/introspect","/refresh"
     };
 
     @Autowired
