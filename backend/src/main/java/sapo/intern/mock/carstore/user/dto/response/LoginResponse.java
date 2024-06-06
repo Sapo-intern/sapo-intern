@@ -13,7 +13,6 @@ import sapo.intern.mock.carstore.user.enums.UserRole;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginResponse {
     String token;
-    String refreshToken;
     Long id;
     String name;
     String phone;
