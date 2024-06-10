@@ -183,4 +183,8 @@ public class TicketService {
         var fromDate = calendar.getTime();
         return ticketRepo.getStatistic(fromDate, toDate);
     }
+
+    public long countAll() {
+        return ticketRepo.countComplete();
+    }
 }

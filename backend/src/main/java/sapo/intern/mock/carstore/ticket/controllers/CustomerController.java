@@ -49,6 +49,12 @@ public class CustomerController {
         return ResponseEntity.ok(new ApiResponse<>("1020", customerService.updateCustomer(customerId, request.getCustomer())));
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<ApiResponse> requestCount() {
+        return ResponseEntity.ok(new ApiResponse("1000", customerService.countAll()));
+    }
+
+
 
     /**/
     /*Exception handler*/

@@ -12,6 +12,8 @@ import java.util.List;
 
 @Repository
 public interface TicketRepo extends JpaRepository<Ticket, Long> {
-    @Query("SELECT new sapo.intern.mock.carstore.ticket.dtos.TicketStatistic(sum(t.id), t.completeDate) FROM Ticket t WHERE t.status = sapo.intern.mock.carstore.ticket.enums.TicketStatus.PAID and t.createdDate BETWEEN :startDate AND :endDate group by t.completeDate")
+    @Query("SELECT new sapo.intern.mock.carstore.ticket.dtos.TicketStatistic(Count(t.id), t.completeDate) FROM Ticket t WHERE t.status = sapo.intern.mock.carstore.ticket.enums.TicketStatus.PAID and t.completeDate BETWEEN :startDate AND :endDate group by t.completeDate")
     List<TicketStatistic> getStatistic(@Param("startDate") Date fromDate, @Param("endDate") Date toDate);
+    @Query("Select count(t.id) FROM Ticket t where t.status = sapo.intern.mock.carstore.ticket.enums.TicketStatus.PAID")
+    long countComplete();
 }
