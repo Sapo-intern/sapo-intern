@@ -106,25 +106,26 @@ public class TicketService {
 
         foundCustomer.addTicket(newTicket);
         foundVehicle.addTicket(newTicket);
+        if (request.getIssueDtos() != null ) {
+            for (var issueDto : request.getIssueDtos()) {
 
-        for (var issueDto : request.getIssueDtos()) {
-
-            var foundService = serviceRepo.findById(issueDto.getServiceId()).orElseThrow(() -> new NotFoundException("Không tìm thấy dịch vụ!"));
-            var foundProduct = productRepo.findById(issueDto.getProductId()).orElseThrow(() -> new NotFoundException("Không tìm thấy linh kiện!"));
-            var foundEmployee = userRepo.findById(issueDto.getEmployeeId().toString()).orElseThrow(() -> new NotFoundException("Không tìm thấy nhân viên!"));
-            var newIssue = new Issue();
-            var newIssueProduct = new IssueProduct();
-
-
-            newIssueProduct.setQuantity(issueDto.getQuantity());
-            newIssueProduct.setProduct(foundProduct);
-            newIssueProduct.setIssue(newIssue);
-            newIssue.setUser(foundEmployee);
+                var foundService = serviceRepo.findById(issueDto.getServiceId()).orElseThrow(() -> new NotFoundException("Không tìm thấy dịch vụ!"));
+                var foundProduct = productRepo.findById(issueDto.getProductId()).orElseThrow(() -> new NotFoundException("Không tìm thấy linh kiện!"));
+                var foundEmployee = userRepo.findById(issueDto.getEmployeeId().toString()).orElseThrow(() -> new NotFoundException("Không tìm thấy nhân viên!"));
+                var newIssue = new Issue();
+                var newIssueProduct = new IssueProduct();
 
 
-            foundService.addIssue(newIssue);
-            newIssue.addIssueProduct(newIssueProduct);
-            newTicket.addIssue(newIssue);
+                newIssueProduct.setQuantity(issueDto.getQuantity());
+                newIssueProduct.setProduct(foundProduct);
+                newIssueProduct.setIssue(newIssue);
+                newIssue.setUser(foundEmployee);
+
+
+                foundService.addIssue(newIssue);
+                newIssue.addIssueProduct(newIssueProduct);
+                newTicket.addIssue(newIssue);
+            }
         }
         return ticketRepo.save(newTicket);
     }

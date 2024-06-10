@@ -77,7 +77,7 @@ public class Issue {
             int quantity = issueProducts.get(i).getQuantity();
             totalAmount += unitPrice * quantity;
         }
-        return totalAmount;
+        return totalAmount + repairService.getPrice();
     }
 
     public void removeProduct(Product product) {
