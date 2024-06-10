@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sapo.intern.mock.carstore.issue.enums.IssueStatus;
 import sapo.intern.mock.carstore.ticket.dtos.CreateIssueDto;
+import sapo.intern.mock.carstore.ticket.enums.TicketStatus;
 import sapo.intern.mock.carstore.ticket.models.Ticket;
 import sapo.intern.mock.carstore.user.models.User;
 
@@ -49,6 +50,17 @@ public class Issue {
 
     public void setProgress(int progress) {
         if (progress == 100) this.status = IssueStatus.COMPLETE;
+        var complete = true;
+        for (Issue issue : ticket.getIssues()) {
+            if (issue.getProgress() != 100) {
+                complete = false;
+            }
+        }
+        if (complete) {
+            ticket.setStatus(TicketStatus.COMPLETE);
+        } else {
+            ticket.setStatus(TicketStatus.PENDING);
+        }
         this.progress = progress;
     }
 
@@ -65,7 +77,7 @@ public class Issue {
             int quantity = issueProducts.get(i).getQuantity();
             totalAmount += unitPrice * quantity;
         }
-        return totalAmount;
+        return totalAmount + repairService.getPrice();
     }
 
     public void removeProduct(Product product) {

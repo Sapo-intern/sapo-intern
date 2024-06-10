@@ -8,8 +8,11 @@ import sapo.intern.mock.carstore.issue.dtos.UpdateIssueRequest;
 import sapo.intern.mock.carstore.issue.helper.IssueProductKey;
 import sapo.intern.mock.carstore.issue.models.*;
 import sapo.intern.mock.carstore.issue.repositories.*;
+import sapo.intern.mock.carstore.ticket.repositories.TicketRepo;
 import sapo.intern.mock.carstore.user.models.User;
 import sapo.intern.mock.carstore.user.repositories.UserRepo;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -19,6 +22,7 @@ public class IssueService {
     private RepairServiceRepo serviceRepo;
     private IssueProductRepo issueProductRepo;
     private UserRepo employeeRepo;
+    private TicketRepo ticketRepo;
 
     @Transactional
     public void deleteProduct(Long issueId, Long productId) {
@@ -122,5 +126,21 @@ public class IssueService {
         User foundEmployee = employeeRepo.findById(employeeId.toString()).orElseThrow(()->new NotFoundException("Không tìm thấy nhân viên!"));
         foundEmployee.removeIssue(foundIssue);
         return issueRepo.save(foundIssue);
+    }
+
+    public List<Issue> getIssuesByEmployeeId(Long employeeId) {
+        return issueRepo.findAll().stream().filter(issue -> issue.getUser() != null && issue.getUser().getId().equals(employeeId)).toList();
+    }
+
+    public Issue updateIssueProgress(Long issueId, int progress) {
+        Issue foundIssue = issueRepo.findById(issueId).orElseThrow(()->new NotFoundException("Không tìm thấy vấn đề!"));
+        foundIssue.setProgress(progress);
+        issueRepo.save(foundIssue);
+        ticketRepo.save(foundIssue.getTicket());
+        return foundIssue;
+    }
+
+    public Issue getIssuesBy(Long issueId) {
+        return issueRepo.findById(issueId).orElseThrow(()->new NotFoundException("Không tìm thấy vấn đề!"));
     }
 }

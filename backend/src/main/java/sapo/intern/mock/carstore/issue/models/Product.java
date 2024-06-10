@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import sapo.intern.mock.carstore.issue.enums.StorageType;
 import sapo.intern.mock.carstore.ticket.models.Ticket;
 
 import java.util.List;
@@ -32,4 +33,16 @@ public class Product {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<IssueProduct> issueProducts;
+
+    public int getQuantity() {
+        var sumQuantity = 0;
+        for (var trans : transactions) {
+            if (trans.getType() == StorageType.IMPORT) {
+                sumQuantity += trans.getQuantity();
+            } else if (trans.getType() == StorageType.SALE) {
+                sumQuantity -= trans.getQuantity();
+            }
+        }
+        return sumQuantity;
+    }
 }

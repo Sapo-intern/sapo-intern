@@ -2,16 +2,19 @@ package sapo.intern.mock.carstore.ticket.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import sapo.intern.mock.carstore.event.TicketCanceled;
 import sapo.intern.mock.carstore.event.TicketCompleted;
+import sapo.intern.mock.carstore.global.exceptions.AppException;
+import sapo.intern.mock.carstore.global.exceptions.ErrorCode;
+import sapo.intern.mock.carstore.ticket.dtos.AmountByDate;
 import sapo.intern.mock.carstore.ticket.enums.TransactionStatus;
 import sapo.intern.mock.carstore.ticket.models.Transaction;
 import sapo.intern.mock.carstore.ticket.repositories.TicketRepo;
 import sapo.intern.mock.carstore.ticket.repositories.TransactionRepo;
-import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -25,30 +28,40 @@ public class TransactionService {
         return transactionRepo.save(transaction);
     }
 
-    public int getTransactions(Date fromDate, Date toDate) {
-        return 0;
+    public List<Transaction> getTransactions(Integer page, Integer size) {
+        return transactionRepo.findAll(PageRequest.of(page, size)).toList();
     }
 
     @EventListener(TicketCompleted.class)
     public void handleTicketCompleted(TicketCompleted event) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         var ticketId = event.getTicketId();
-        var ticket = ticketRepo.getReferenceById(ticketId);
+        var ticket = ticketRepo.findById(ticketId).orElseThrow(()-> new AppException(ErrorCode.TICKET_NOT_FOUND));
         var newTrans = new Transaction();
-        newTrans.setStatus(TransactionStatus.PAID);
         newTrans.setAmount(ticket.getTotalAmount());
         newTrans.setCreatedDate(dateFormat.format(new Date(System.currentTimeMillis())));
         transactionRepo.save(newTrans);
     }
-    @EventListener(TicketCanceled.class)
-    public void handleTicketCanceled(TicketCanceled event) {
+
+
+
+    public Integer getTransactionsAmount(String from, String to) {
+        var sum = 0;
+        for (var trans : transactionRepo.findAllPaidTransactionsBetweenDates(from, to) ) {
+                sum+= (int) trans.getAmount();
+        }
+        return sum;
+    }
+
+    public List<AmountByDate> getStatistic() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        var ticketId = event.getTicketId();
-        var ticket = ticketRepo.getReferenceById(ticketId);
-        var newTrans = new Transaction();
-        newTrans.setStatus(TransactionStatus.CANCELED);
-        newTrans.setAmount(ticket.getTotalAmount());
-        newTrans.setCreatedDate(dateFormat.format(new Date(System.currentTimeMillis())));
-        transactionRepo.save(newTrans);
+        var currentDate = new Date(System.currentTimeMillis());
+        var toDate = dateFormat.format(currentDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        Date sevenDaysAgo = calendar.getTime();
+        String fromDate = dateFormat.format(sevenDaysAgo);
+        return transactionRepo.getStatistic(fromDate, toDate);
     }
 }

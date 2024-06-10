@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sapo.intern.mock.carstore.issue.enums.IssueStatus;
 import sapo.intern.mock.carstore.issue.models.Issue;
 import sapo.intern.mock.carstore.ticket.enums.TicketStatus;
 
@@ -47,11 +48,33 @@ public class Ticket {
     }
 
     public void setStatus(TicketStatus status) {
+        if (this.status == TicketStatus.CANCELED || this.status == TicketStatus.PAID) {
+            return;
+        }
         if (status == TicketStatus.PAID) {
             this.completeDate = new Date(System.currentTimeMillis());
         }
         this.status = status;
     }
+
+
+    public TicketStatus getStatus() {
+        if (status == TicketStatus.PAID || status == TicketStatus.CANCELED) return status;
+        var complete = true;
+        for (var issue : issues) {
+            if (issue.getStatus() != IssueStatus.COMPLETE) {
+                complete = false;
+                break;
+            }
+        }
+        if (complete) {
+            return TicketStatus.COMPLETE;
+        } else {
+            return TicketStatus.PENDING;
+        }
+    }
+
+
 
 
     public double getTotalAmount() {

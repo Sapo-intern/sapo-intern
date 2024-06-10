@@ -63,7 +63,7 @@ const Layouts = () => {
   const items = user && user.role === "MANAGER"
   ? [
       getItem("Trang chủ", "1", <HomeOutlined />, "/"),
-      getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/repair"),
+      getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
       getItem("Nhân viên", "3", <UserOutlined />, "/user"),
       getItem("Khách hàng", "4", <UsergroupAddOutlined />, "/customers"),
       getItem("Sản phẩm", "5", <ProductOutlined />, "/product"),
@@ -78,7 +78,10 @@ const Layouts = () => {
     ]
   : [
       getItem("Trang chủ", "1", <HomeOutlined />, "/"),
-      getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/repair"),
+      getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
+      getItem("Vấn đề xe", "3", <ToolOutlined />, "/issue"),
+      getItem("Thống kê doanh thu", "4", <ToolOutlined />, "/transaction"),
+      getItem("Kho sản phẩm", "5", <ToolOutlined />, "/storage"),
       getItem(
         "Thông tin cá nhân",
         "7",

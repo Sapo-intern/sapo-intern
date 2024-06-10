@@ -46,10 +46,10 @@ export const useTicketColumns = (cancleTicket, completeTicket) => {
           >
             Xem chi tiết
           </Button>
-          <Button disabled={option.status !== 'PENDING'}  onClick={() => cancleTicket(option.id)} danger>
+          <Button disabled={option.status === 'CANCELED' || option.status === 'PAID'}  onClick={() => cancleTicket(option.id)} danger>
             Hủy
           </Button>
-          <Button disabled={option.status !== 'PENDING'} onClick={() => completeTicket(option.id)}>Hoàn thành</Button>
+          <Button disabled={option.status !== 'COMPLETE'} onClick={() => completeTicket(option.id)}>Thanh toán</Button>
         </Space>
       ),
     },

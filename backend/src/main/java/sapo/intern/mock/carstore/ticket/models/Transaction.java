@@ -21,10 +21,6 @@ public class Transaction {
     @Column(name = "transaction_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Enumerated(EnumType.ORDINAL)
-    private PayMethod payMethod;
     private double amount;
-    @Enumerated(EnumType.ORDINAL)
-    private TransactionStatus status;
     private String createdDate;
 }
