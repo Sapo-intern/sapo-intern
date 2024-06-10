@@ -31,7 +31,6 @@ const App = () => {
   return (
     <Router>
       <AuthProvider>
-        <ToastContainer />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
@@ -54,25 +53,24 @@ const App = () => {
               <Route path="/user/add" element={<UserAdd />} />
               <Route path="/user/:id" element={<UserEdit />} />
 
-              <Route path="ticket" element={<TicketList/>}/>
-              <Route path="ticket/add" element={<TicketAdd/>}/>
-              <Route path="ticket/:id" element={<TicketDetail/>}/>
-            <Route path="/ticket" element= {<TicketList/>}/>
-            <Route path="/ticket/add" element= {<TicketAdd/>}/>
-            <Route path="/ticket/:id" element= {<TicketDetail/>}/>
+              <Route path="ticket" element={<TicketList />} />
+              <Route path="ticket/add" element={<TicketAdd />} />
+              <Route path="ticket/:id" element={<TicketDetail />} />
+              <Route path="/ticket" element={<TicketList />} />
+              <Route path="/ticket/add" element={<TicketAdd />} />
+              <Route path="/ticket/:id" element={<TicketDetail />} />
 
-              <Route path="customers" element={<CustomersList/>}/>
-            <Route path="/transaction" element= {<ListTransactionScreen/>}/>
+              <Route path="customers" element={<CustomersList />} />
+              <Route path="/transaction" element={<ListTransactionScreen />} />
 
-                               <Route path="/issue" element= {<ListIssueScreen/>}/>
-                               <Route path="/issue/:id" element= {<DetailIssueScreen/>}/>
+              <Route path="/issue" element={<ListIssueScreen />} />
+              <Route path="/issue/:id" element={<DetailIssueScreen />} />
 
-                               <Route path="/storage" element= {<ProductStatisticScreen/>}/>
+              <Route path="/storage" element={<ProductStatisticScreen />} />
             </Route>
           </Route>
           <Route path="/error" element={<NotFound />} />
-        </Route>
-      </Routes>
+        </Routes>
       </AuthProvider>
     </Router>
   );
