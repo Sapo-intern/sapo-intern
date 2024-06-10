@@ -11,6 +11,8 @@ import sapo.intern.mock.carstore.issue.repositories.*;
 import sapo.intern.mock.carstore.user.models.User;
 import sapo.intern.mock.carstore.user.repositories.UserRepo;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Service
 public class IssueService {
@@ -122,5 +124,19 @@ public class IssueService {
         User foundEmployee = employeeRepo.findById(employeeId.toString()).orElseThrow(()->new NotFoundException("Không tìm thấy nhân viên!"));
         foundEmployee.removeIssue(foundIssue);
         return issueRepo.save(foundIssue);
+    }
+
+    public List<Issue> getIssuesByEmployeeId(Long employeeId) {
+        return issueRepo.findAll().stream().filter(issue -> issue.getUser() != null && issue.getUser().getId().equals(employeeId)).toList();
+    }
+
+    public Issue updateIssueProgress(Long issueId, int progress) {
+        Issue foundIssue = issueRepo.findById(issueId).orElseThrow(()->new NotFoundException("Không tìm thấy vấn đề!"));
+        foundIssue.setProgress(progress);
+        return issueRepo.save(foundIssue);
+    }
+
+    public Issue getIssuesBy(Long issueId) {
+        return issueRepo.findById(issueId).orElseThrow(()->new NotFoundException("Không tìm thấy vấn đề!"));
     }
 }

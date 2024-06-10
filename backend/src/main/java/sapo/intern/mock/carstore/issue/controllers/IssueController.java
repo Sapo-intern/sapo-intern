@@ -72,4 +72,26 @@ public class IssueController {
     ) {
         return ResponseEntity.ok(new ApiResponse<>("1030", issueService.removeEmployee(issueId, employeeId)));
     }
+
+    @GetMapping("/")
+    public ResponseEntity<ApiResponse> requestGetEmployeeIssues(
+            @RequestParam Long employeeId
+    ) {
+        return ResponseEntity.ok(new ApiResponse<>("1000", issueService.getIssuesByEmployeeId(employeeId)));
+    }
+
+    @GetMapping("/{issueId}")
+    public ResponseEntity<ApiResponse> requestGetIssue(
+            @PathVariable Long issueId
+    ) {
+        return ResponseEntity.ok(new ApiResponse<>("1000", issueService.getIssuesBy(issueId)));
+    }
+
+    @PostMapping("/{issueId}")
+    public ResponseEntity<ApiResponse> requestUpdateProgress(
+            @PathVariable Long issueId,
+            @RequestParam int progress
+    ) {
+        return ResponseEntity.ok(new ApiResponse<>("1000", issueService.updateIssueProgress(issueId, progress)));
+    }
 }

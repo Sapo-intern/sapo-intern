@@ -92,5 +92,9 @@ public class TicketController {
     }
 
 
+    @GetMapping("/statistic")
+    public ResponseEntity<ApiResponse> requestGetStatistic() {
+        return ResponseEntity.ok(new ApiResponse("1000", ticketService.getStatistic()));
+    }
 
 }

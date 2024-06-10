@@ -357,7 +357,7 @@ const TicketAdd = () => {
                           placeholder="Chọn linh kiện"
                           onChange={(e) => handleFormChange(e, "issue")}
                           options={products?.map((product) => ({
-                            label: product.name || "Mr. A",
+                            label: product.name,
                             value: product.id,
                           }))}
                         />

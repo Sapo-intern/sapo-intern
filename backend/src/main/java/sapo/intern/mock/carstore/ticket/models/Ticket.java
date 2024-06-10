@@ -54,6 +54,8 @@ public class Ticket {
     }
 
 
+
+
     public double getTotalAmount() {
         double totalAmount = 0;
         for (int i = 0; i < issues.size(); i++) {

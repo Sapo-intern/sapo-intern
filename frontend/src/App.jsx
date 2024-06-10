@@ -20,6 +20,10 @@ import TicketList from "./component/tickets/TicketList";
 import TicketAdd from "./component/tickets/TicketAdd";
 import TicketDetail from "./component/tickets/TicketDetail";
 import { ToastContainer } from "react-toastify";
+import ListIssueScreen from "./component/issues/ListIssueScreen";
+import DetailIssueScreen from "./component/issues/DetailIssueScreen";
+import ListTransactionScreen from "./component/Transaction/ListTransactionScreen";
+import ProductStatisticScreen from "./component/storages/ProductStatisticScreen";
 
 const App = () => {
   return (
@@ -48,10 +52,16 @@ const App = () => {
             <Route path="/user/add" element={<UserAdd />} />
             <Route path="/user/:id" element={<UserEdit />} />
 
-            <Route path="ticket" element= {<TicketList/>}/>
-            <Route path="ticket/add" element= {<TicketAdd/>}/>
-            <Route path="ticket/:id" element= {<TicketDetail/>}/>
+            <Route path="/ticket" element= {<TicketList/>}/>
+            <Route path="/ticket/add" element= {<TicketAdd/>}/>
+            <Route path="/ticket/:id" element= {<TicketDetail/>}/>
 
+            <Route path="/transaction" element= {<ListTransactionScreen/>}/>
+            
+            <Route path="/issue" element= {<ListIssueScreen/>}/>
+            <Route path="/issue/:id" element= {<DetailIssueScreen/>}/>
+
+            <Route path="/storage" element= {<ProductStatisticScreen/>}/>
           </Route>
         </Route>
         <Route path="/error" element={<NotFound />} />

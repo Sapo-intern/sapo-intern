@@ -22,6 +22,8 @@ public enum ErrorCode {
     UNAUTHORIZED(1012, "Bạn không có quyền", HttpStatus.FORBIDDEN),
     PRODUCT_EXISTED(1013, "Sản phẩm đã có", HttpStatus.BAD_REQUEST),
     SERVICES_EXISTED(1013, "Dịch vụ đã có", HttpStatus.BAD_REQUEST),
+    TICKET_NOT_FOUND(1040, "Không tồn tại phiếu sửa chữa", HttpStatus.NOT_FOUND),
+    INVALID_REQUEST(1051, "Yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

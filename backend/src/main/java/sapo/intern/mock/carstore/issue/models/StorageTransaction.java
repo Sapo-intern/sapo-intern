@@ -3,6 +3,7 @@ package sapo.intern.mock.carstore.issue.models;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sapo.intern.mock.carstore.issue.enums.StorageType;
 
@@ -13,8 +14,10 @@ import java.sql.Date;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class StorageTransaction {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date createdDate = new Date(System.currentTimeMillis());
     private int quantity;

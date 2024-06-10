@@ -20,11 +20,23 @@ public class TransactionController {
         return ResponseEntity.ok(new ApiResponse<>("1010", transactionService.saveTransaction(request.getTransaction())));
     }
 
+    @GetMapping("/get-amounts")
+    public ResponseEntity<ApiResponse> requestGetTransactionsAmount(
+            @RequestParam String fromDate,
+            @RequestParam String toDate) {
+        return ResponseEntity.ok(new ApiResponse<>("1000", transactionService.getTransactionsAmount(fromDate, toDate)));
+    }
+
     @GetMapping("/")
     public ResponseEntity<ApiResponse> requestGetTransactions(
-            @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fromDate,
-            @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date toDate) {
-        return ResponseEntity.ok(new ApiResponse<>("1000", transactionService.getTransactions(fromDate, toDate)));
+            @RequestParam Integer page,
+            @RequestParam Integer size) {
+        return ResponseEntity.ok(new ApiResponse<>("1000", transactionService.getTransactions(page, size)));
+    }
+
+    @GetMapping("/statistic")
+    public ResponseEntity<ApiResponse> requestGetStatistic() {
+        return ResponseEntity.ok(new ApiResponse("1000", transactionService.getStatistic()));
     }
 
 }

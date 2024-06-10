@@ -5,18 +5,19 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sapo.intern.mock.carstore.event.TicketCanceled;
+import sapo.intern.mock.carstore.event.ProductStorage;
 import sapo.intern.mock.carstore.event.TicketCompleted;
 import sapo.intern.mock.carstore.global.exceptions.NotFoundException;
+import sapo.intern.mock.carstore.issue.enums.StorageType;
 import sapo.intern.mock.carstore.issue.helper.IssueProductKey;
 import sapo.intern.mock.carstore.issue.models.Issue;
 import sapo.intern.mock.carstore.issue.models.IssueProduct;
 import sapo.intern.mock.carstore.issue.repositories.IssueRepo;
 import sapo.intern.mock.carstore.issue.repositories.ProductRepo;
 import sapo.intern.mock.carstore.issue.repositories.RepairServiceRepo;
-import sapo.intern.mock.carstore.issue.services.EmployeeService;
 import sapo.intern.mock.carstore.ticket.dtos.AddIssueRequest;
 import sapo.intern.mock.carstore.ticket.dtos.CreateTicketRequest;
+import sapo.intern.mock.carstore.ticket.dtos.TicketStatistic;
 import sapo.intern.mock.carstore.ticket.enums.TicketStatus;
 import sapo.intern.mock.carstore.ticket.models.Customer;
 import sapo.intern.mock.carstore.ticket.models.Ticket;
@@ -26,6 +27,7 @@ import sapo.intern.mock.carstore.ticket.repositories.VehicleRepo;
 import sapo.intern.mock.carstore.user.repositories.UserRepo;
 
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -144,10 +146,15 @@ public class TicketService {
 
     public Ticket updateTicketComplete(Long ticketId) {
         Ticket foundTicket = ticketRepo.findById(ticketId).orElseThrow(() -> new NotFoundException("Không tồn tại ticket " + ticketId));
-        foundTicket.setStatus(TicketStatus.COMPLETE);
+        foundTicket.setStatus(TicketStatus.PAID);
         foundTicket.setCompleteDate(new Date(System.currentTimeMillis()));
         var savedTicket = ticketRepo.save(foundTicket);
         applicationEventPublisher.publishEvent(new TicketCompleted(savedTicket.getId()));
+        for (var issue : savedTicket.getIssues()) {
+            for (var issueProduct : issue.getIssueProducts()) {
+                applicationEventPublisher.publishEvent(new ProductStorage(issueProduct.getId().getProductId(), issueProduct.getQuantity(), StorageType.SALE));
+            }
+        }
         return savedTicket;
     }
 
@@ -159,7 +166,20 @@ public class TicketService {
         var foundTicket = ticketRepo.findById(ticketId).orElseThrow(() -> new NotFoundException("Không tìm thấy phiếu sửa chữa!"));
         foundTicket.setCompleteDate(null);
         foundTicket.setStatus(TicketStatus.CANCELED);
-        applicationEventPublisher.publishEvent(new TicketCanceled(foundTicket.getId()));
+        for (var issue : foundTicket.getIssues()) {
+            for (var issueProduct : issue.getIssueProducts()) {
+                applicationEventPublisher.publishEvent(new ProductStorage(issueProduct.getId().getProductId(), issueProduct.getQuantity(), StorageType.CANCELED));
+            }
+        }
         return ticketRepo.save(foundTicket);
+    }
+
+    public List<TicketStatistic> getStatistic() {
+        var toDate = new java.util.Date(System.currentTimeMillis());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(toDate);
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        var fromDate = calendar.getTime();
+        return ticketRepo.getStatistic(fromDate, toDate);
     }
 }
