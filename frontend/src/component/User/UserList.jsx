@@ -19,13 +19,13 @@ const getColumns = (handleDelete) => [
     dataIndex: "age",
     sorter: (a, b) => a.age - b.age,
   },
-  // {
-  //   title: "Hình ảnh",
-  //   dataIndex: "urlImage",
-  //   render: (urlImage) => (
-  //     <img src={urlImage} style={{ width: 180, height: 180 }} />
-  //   ),
-  // },
+  {
+    title: "Hình ảnh",
+    dataIndex: "urlImage",
+    render: (urlImage) => (
+      <img src={urlImage} style={{ width: 160, height: 160 }} />
+    ),
+  },
   {
     title: "Địa chỉ",
     dataIndex: "address",

@@ -72,4 +72,14 @@ public class AuthController {
     public UserRole[] getUserRoles() {
         return UserRole.values();
     }
+
+    @PostMapping("/refresh")
+    ApiResponse<LoginResponse> refreshToken(@RequestBody RefreshRequest request)
+            throws ParseException, JOSEException {
+        var result = authService.refreshToken(request);
+        return ApiResponse.<LoginResponse>builder()
+                .result(result)
+                .build();
+    }
+
 }
