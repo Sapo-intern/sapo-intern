@@ -2,6 +2,7 @@ package sapo.intern.mock.carstore.issue.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import sapo.intern.mock.carstore.global.exceptions.AppException;
 import sapo.intern.mock.carstore.global.exceptions.ErrorCode;
@@ -9,6 +10,7 @@ import sapo.intern.mock.carstore.issue.dtos.ProductCreateRequest;
 import sapo.intern.mock.carstore.issue.dtos.ProductUpdateRequest;
 import sapo.intern.mock.carstore.issue.models.Product;
 import sapo.intern.mock.carstore.issue.repositories.ProductRepo;
+import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
 
 import java.util.List;
 
@@ -80,5 +82,9 @@ public class ProductServices {
     public Page<Product> getAllProductPaginated(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return productRepo.findAll(pageable);
+    }
+
+    public Long countAll() {
+        return productRepo.count();
     }
 }

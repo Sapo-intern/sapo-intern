@@ -72,4 +72,12 @@ public class ProductController {
         return productServices.getProductByName(name);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<ApiResponse> requestCount() {
+        ApiResponse<Long> reponse = ApiResponse.<Long>builder()
+                .message("Lấy dữ liệu thành công")
+                .result(productServices.countAll())
+                .build();
+        return ResponseEntity.ok(reponse);
+    }
 }

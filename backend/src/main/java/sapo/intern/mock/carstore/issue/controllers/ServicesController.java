@@ -72,4 +72,13 @@ public class ServicesController {
         return services.getServicestByName(name);
     }
 
+
+    @GetMapping("/count")
+    public ResponseEntity<ApiResponse> requestCount() {
+        ApiResponse<Long> reponse = ApiResponse.<Long>builder()
+                .message("Lấy dữ liệu thành công")
+                .result(services.countAll())
+                .build();
+        return ResponseEntity.ok(reponse);
+    }
 }

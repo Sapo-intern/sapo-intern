@@ -78,4 +78,8 @@ public class Services {
         Pageable pageable = PageRequest.of(page, size);
         return serviceRepo.findAll(pageable);
     }
+
+    public Long countAll() {
+        return serviceRepo.count();
+    }
 }

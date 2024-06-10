@@ -47,4 +47,8 @@ public class CustomerService {
     public Customer getCustomerDetail(Long customerId) {
         return customerRepo.findById(customerId).orElseThrow(()-> new NotFoundException("Không tồn tại khách hàng " + customerId));
     }
+
+    public long countAll() {
+        return customerRepo.count();
+    }
 }
