@@ -1,9 +1,12 @@
 package sapo.intern.mock.carstore.ticket.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import sapo.intern.mock.carstore.global.exceptions.AppException;
+import sapo.intern.mock.carstore.global.exceptions.ErrorCode;
 import sapo.intern.mock.carstore.global.exceptions.NotFoundException;
 import sapo.intern.mock.carstore.ticket.models.Customer;
 import sapo.intern.mock.carstore.ticket.models.Vehicle;
@@ -11,7 +14,6 @@ import sapo.intern.mock.carstore.ticket.repositories.CustomerRepo;
 import sapo.intern.mock.carstore.ticket.repositories.VehicleRepo;
 
 import java.util.List;
-import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -28,13 +30,21 @@ public class CustomerService {
         return customerRepo.save(foundCustomer);
     }
 
-    public List<Customer> getCustomerList(Integer page, Integer size) {
-        List<Customer> foundCustomers = customerRepo.findAll(PageRequest.of(page, size)).stream().toList();
-        if (foundCustomers.isEmpty()) {
-            throw new NotFoundException("Không tồn tại khách hàng");
-        }
-        return foundCustomers;
+    public Page<Customer> getCustomerList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return customerRepo.findAll(pageable);
     }
+
+    public List<Customer> getUserByKeyword(String keyword) {
+        List<Customer> customer = customerRepo.findByKeywordContainingIgnoreCase(keyword);
+
+        if(customer.isEmpty()) {
+            throw new AppException(ErrorCode.NO_DATA);
+        }
+
+        return customer;
+    }
+
 
     public Vehicle createVehicle(Long customerId, Vehicle vehicle) {
         Customer foundCustomer = customerRepo.findById(customerId).orElse(null);
