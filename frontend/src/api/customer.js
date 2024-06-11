@@ -2,10 +2,13 @@ import instance from "./instance";
 
 export const CustomerApi = {
   getAll: async (page, size) => {
-    return instance.get(`/customers/?page=${page}&size=${size}`);
+    return instance.get(`/customers?page=${page}&size=${size}`);
   },
   createCustomer: async (customer) => {
     return instance.post("/customers/", { customer });
+  },
+  searchCustomer: async(keyword) => {
+    return instance.get(`/customers/search?keyword=${keyword}`);
   },
   createVehicle: async (customerId, vehicle) => {
     return await instance.post(`/customers/${customerId}/vehicles/`, {
