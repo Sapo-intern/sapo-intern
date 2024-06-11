@@ -28,8 +28,5 @@ public class ProductUpdateRequest {
     Double price;
     String urlImage;
 
-    @NotNull
-    @Min(value = 1, message = "Số lượng phải là số và lớn hơn 1")
-    Integer quantity;
     String description;
 }

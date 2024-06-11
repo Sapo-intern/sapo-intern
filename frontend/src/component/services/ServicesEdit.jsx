@@ -1,21 +1,16 @@
-import { Button, Col, Form, Input, Row } from "antd";
+import { Button, Form, Input } from "antd";
 import Swal from "sweetalert2";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ServiceApi from "../../api/services";
 
-const ServiceEdit = () => {
-  const navigate = useNavigate();
-  const [services, setServices] = useState(null);
-  const { id } = useParams();
+const ServiceEdit = ({ closeModal, fetchServices, serviceId }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await ServiceApi.getOneService(id);
+        const response = await ServiceApi.getOneService(serviceId);
         const servicesData = response.result;
-        setServices(servicesData);
 
         if (servicesData) {
           form.setFieldsValue({
@@ -31,18 +26,21 @@ const ServiceEdit = () => {
     };
 
     fetchServices();
-  }, [id, form]);
+  }, [serviceId, form]);
 
   const handleSubmit = async (values) => {
     try {
-      await ServiceApi.updateService(id, values);
+      await ServiceApi.updateService(serviceId, values);
 
       Swal.fire({
         title: "Success!",
         text: "Cập nhật dịch vụ thành công",
         icon: "success",
         confirmButtonText: "OK",
-      }).then(() => navigate("/services"));
+      }).then(() => {
+        closeModal();
+        fetchServices();
+      });
     } catch (error) {
       Swal.fire({
         title: "Error!",
@@ -122,22 +120,11 @@ const ServiceEdit = () => {
           <Input />
         </Form.Item>
 
-        <Row>
-          <Col>
-            <Form.Item style={{ display: "flex", marginRight: 12 }}>
-              <Button type="primary" htmlType="submit">
-                Sửa
-              </Button>
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item style={{ display: "flex" }}>
-              <Button type="primary">
-                <Link to="/services">Quay lại</Link>
-              </Button>
-            </Form.Item>
-          </Col>
-        </Row>
+        <Form.Item style={{ display: "flex", marginRight: 12 }}>
+          <Button type="primary" htmlType="submit">
+            Sửa
+          </Button>
+        </Form.Item>
       </Form>
     </>
   );

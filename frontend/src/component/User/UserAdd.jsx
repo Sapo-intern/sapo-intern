@@ -1,11 +1,9 @@
 import { Button, Col, Form, Input, Row, Select } from "antd";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import auth from "../../api/auth";
 
 const UserAdd = ({ closeModal, fetchUser }) => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [roles, setRoles] = useState([]);
@@ -119,7 +117,6 @@ const UserAdd = ({ closeModal, fetchUser }) => {
               width: 400,
             }}
             placeholder="Chọn quyền"
-            // onChange={handleChange}
             options={options}
             onChange={(value) => setSelectedRole(value)}
           />

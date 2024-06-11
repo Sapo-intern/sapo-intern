@@ -22,7 +22,7 @@ public class RepairService {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String serviceCode;
+    private String servicesCode;
     private String description;
     private Double price;
     @JsonIgnore
