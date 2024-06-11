@@ -19,13 +19,13 @@ import UserEdit from "./component/User/UserEdit";
 import TicketList from "./component/tickets/TicketList";
 import TicketAdd from "./component/tickets/TicketAdd";
 import TicketDetail from "./component/tickets/TicketDetail";
-import { ToastContainer } from "react-toastify";
 import ListIssueScreen from "./component/issues/ListIssueScreen";
 import DetailIssueScreen from "./component/issues/DetailIssueScreen";
 import ListTransactionScreen from "./component/Transaction/ListTransactionScreen";
 import ProductStatisticScreen from "./component/storages/ProductStatisticScreen";
 import CustomersList from "./component/customers/CustomersList";
 import { AuthProvider } from "./Context/ContextAuth";
+import ChangePasswordUser from "./component/User/ChangePassword";
 
 const App = () => {
   return (
@@ -52,7 +52,7 @@ const App = () => {
               <Route path="/user" element={<UserList />} />
               <Route path="/user/add" element={<UserAdd />} />
               <Route path="/user/:id" element={<UserEdit />} />
-              <Route path="/user/changepassword" element={<ChangePassword />} />
+              <Route path="/user/changepassword" element={<ChangePasswordUser />} />
 
 
               <Route path="ticket" element={<TicketList />} />
