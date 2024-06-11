@@ -26,7 +26,7 @@ const ProductApi = {
     return instance.patch(url, data);
   },
 
-  searchProduct(name, ) {
+  searchProduct(name) {
     const url = `/products/search?name=${name}`;
     return instance.get(url);
   },

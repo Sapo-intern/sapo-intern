@@ -35,7 +35,7 @@ const CustomersList = () => {
   const fetchCustomers = async (page, size) => {
     try {
       const response = await CustomerApi.getAll(page, size);
-      setCustomers(response.data);
+      setCustomers(response.content);
       setTotalItems(response.totalElements);
     } catch (error) {
       console.error("Không có dữ liệu:", error);
@@ -51,6 +51,23 @@ const CustomersList = () => {
     setPageSize(pageSize);
   };
 
+  const searchCustomer = async (keyword) => {
+    try {
+      const response = await CustomerApi.searchCustomer(keyword);
+      setCustomers(response);
+    } catch (error) {
+      console.error("Không tìm thấy khách hàng:", error);
+    }
+  };
+
+  const handleSearch = (value) => {
+    if (value) {
+      searchCustomer(value);
+    } else {
+      fetchCustomers(currentPage, pageSize);
+    }
+  };
+
   return (
     <>
       <h1>Khách hàng</h1>
@@ -61,8 +78,8 @@ const CustomersList = () => {
             allowClear
             enterButton="Tìm kiếm"
             size="large"
-            // onSearch={handleSearch}
-            // onChange={(e) => handleSearch(e.target.value)}
+            onSearch={handleSearch}
+            onChange={(e) => handleSearch(e.target.value)}
           />
         </Col>
       </Row>
