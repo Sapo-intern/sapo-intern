@@ -30,7 +30,7 @@ public class Services {
             throw new AppException(ErrorCode.SERVICES_EXISTED);
         }
 
-        services.setServiceCode(request.getServicesCode());
+        services.setServicesCode(request.getServicesCode());
         services.setName(request.getName());
         services.setPrice(request.getPrice());
         services.setDescription(request.getDescription());
@@ -42,7 +42,7 @@ public class Services {
     public RepairService updateServices(Long servicesId, ServicesUpdateRequest request){
         RepairService services = getServices(servicesId);
 
-        services.setServiceCode(request.getServicesCode());
+        services.setServicesCode(   request.getServicesCode());
         services.setName(request.getName());
         services.setPrice(request.getPrice());
         services.setDescription(request.getDescription());

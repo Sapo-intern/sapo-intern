@@ -5,11 +5,12 @@ import Swal from "sweetalert2";
 const { Search } = Input;
 import ServiceApi from "../../api/services";
 import ServicesAdd from "./ServicesAdd";
+import ServiceEdit from "./ServicesEdit";
 
-const getColumns = (handleDelete) => [
+const getColumns = (handleDelete,handleEdit) => [
   {
     title: "Mã dịch vụ",
-    dataIndex: "serviceCode",
+    dataIndex: "servicesCode",
   },
   {
     title: "Tên",
@@ -31,8 +32,8 @@ const getColumns = (handleDelete) => [
         <Button danger onClick={() => handleDelete(record.id)}>
           Xóa
         </Button>
-        <Button>
-          <Link to={`/services/${record.id}`}>Sửa</Link>
+        <Button onClick={() => handleEdit(record.id)}>
+          Sửa
         </Button>
       </Space>
     ),
@@ -46,6 +47,8 @@ const ServicesList = () => {
   const [totalItems, setTotalItems] = useState(0);
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [currentServicesId, setCurrentServicesId] = useState(null);
 
   const fetchServices = async (page, size) => {
     try {
@@ -118,6 +121,12 @@ const ServicesList = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setIsEditModalVisible(false);
+  };
+
+  const handleEdit = (id) => {
+    setCurrentServicesId(id);
+    setIsEditModalVisible(true);
   };
 
   return (
@@ -145,7 +154,7 @@ const ServicesList = () => {
         </Col>
       </Row>
       <Table
-        columns={getColumns(handleDelete)}
+        columns={getColumns(handleDelete,handleEdit)}
         dataSource={services.map((item) => ({
           ...item,
           key: item.id,
@@ -162,6 +171,14 @@ const ServicesList = () => {
 
       <Modal visible={isModalVisible} onCancel={handleCancel} footer={null}>
         <ServicesAdd closeModal={handleCancel} fetchServices={fetchServices} />
+      </Modal>
+      <Modal
+        visible={isEditModalVisible}
+        onCancel={handleCancel}
+        footer={null}
+        destroyOnClose={true}
+      >
+        <ServiceEdit closeModal={handleCancel} fetchServices={fetchServices} serviceId={currentServicesId} />
       </Modal>
     </>
   );
