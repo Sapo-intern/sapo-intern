@@ -3,7 +3,9 @@ import { Button, Col, Row, Space, Table, Tag, Input, Pagination } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import UserApi from "../../api/user";
+import Modal from "antd/es/modal/Modal";
 const { Search } = Input;
+import UserAdd from "./UserAdd";
 const getColumns = (handleDelete) => [
   {
     title: "Tên",
@@ -85,6 +87,7 @@ const UserList = () => {
   const [pageSize, setPageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
   const navigate = useNavigate();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const fetchUser = async (page, size) => {
     try {
@@ -151,6 +154,14 @@ const UserList = () => {
     }
   };
 
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <>
       <h1>Danh sách nhân viên</h1>
@@ -170,11 +181,9 @@ const UserList = () => {
           offset={8}
           style={{ display: "flex", justifyContent: "end" }}
         >
-          <Link to="/user/add">
-            <Button size="large" type="primary">
-              Thêm nhân viên
-            </Button>
-          </Link>
+          <Button size="large" type="primary" onClick={showModal}>
+            Thêm nhân viên
+          </Button>
         </Col>
       </Row>
       <Table
@@ -185,7 +194,6 @@ const UserList = () => {
           name: item.name,
         }))}
         pagination={false}
-        // onChange={onChange}
       />
       ;
       <Pagination
@@ -195,6 +203,9 @@ const UserList = () => {
         total={totalItems}
         onChange={handlePageChange}
       />
+      <Modal visible={isModalVisible} onCancel={handleCancel} footer={null}>
+        <UserAdd closeModal={handleCancel} fetchUser={fetchUser} />
+      </Modal>
     </>
   );
 };

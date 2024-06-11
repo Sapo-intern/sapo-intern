@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Row, Space, Table, Input, Pagination } from "antd";
+import { Button, Col, Row, Space, Table, Input, Pagination, Modal } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-const { Search } = Input;
 import ProductApi from "../../api/products";
+import ProductsAdd from "./ProductsAdd"; 
+const { Search } = Input;
 
 const getColumns = (handleDelete) => [
   {
@@ -43,6 +44,7 @@ const ProductList = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
 
   const fetchProducts = async (page, size) => {
@@ -110,6 +112,14 @@ const ProductList = () => {
     }
   };
 
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <>
       <h1>Sản phẩm</h1>
@@ -129,11 +139,9 @@ const ProductList = () => {
           offset={8}
           style={{ display: "flex", justifyContent: "end" }}
         >
-          <Link to="/product/add">
-            <Button size="large" type="primary">
-              Thêm sản phẩm
-            </Button>
-          </Link>
+          <Button size="large" type="primary" onClick={showModal}>
+            Thêm sản phẩm
+          </Button>
         </Col>
       </Row>
       <Table
@@ -151,6 +159,14 @@ const ProductList = () => {
         total={totalItems}
         onChange={handlePageChange}
       />
+
+      <Modal
+        visible={isModalVisible}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        <ProductsAdd closeModal={handleCancel} fetchProducts={fetchProducts} />
+      </Modal>
     </>
   );
 };

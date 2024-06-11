@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Row, Space, Table, Input, Pagination } from "antd";
+import { Button, Col, Row, Space, Table, Input, Pagination, Modal } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 const { Search } = Input;
 import ServiceApi from "../../api/services";
+import ServicesAdd from "./ServicesAdd";
 
 const getColumns = (handleDelete) => [
   {
@@ -44,6 +45,7 @@ const ServicesList = () => {
   const [pageSize, setPageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
   const navigate = useNavigate();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const fetchServices = async (page, size) => {
     try {
@@ -110,6 +112,14 @@ const ServicesList = () => {
     }
   };
 
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <>
       <h1>DỊCH VỤ</h1>
@@ -129,11 +139,9 @@ const ServicesList = () => {
           offset={8}
           style={{ display: "flex", justifyContent: "end" }}
         >
-          <Link to="/services/add">
-            <Button size="large" type="primary">
-              Thêm dịch vụ
-            </Button>
-          </Link>
+          <Button size="large" type="primary" onClick={showModal}>
+            Thêm dịch vụ
+          </Button>
         </Col>
       </Row>
       <Table
@@ -151,6 +159,10 @@ const ServicesList = () => {
         total={totalItems}
         onChange={handlePageChange}
       />
+
+      <Modal visible={isModalVisible} onCancel={handleCancel} footer={null}>
+        <ServicesAdd closeModal={handleCancel} fetchServices={fetchServices} />
+      </Modal>
     </>
   );
 };

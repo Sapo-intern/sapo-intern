@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import auth from "../../api/auth";
 
-const UserAdd = () => {
+const UserAdd = ({ closeModal, fetchUser }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
@@ -42,7 +42,10 @@ const UserAdd = () => {
         text: "Thêm nhân viên thành công",
         icon: "success",
         confirmButtonText: "OK",
-      }).then(()=>navigate("/user"));
+      }).then(()=>{
+        closeModal();
+        fetchUser();
+      });
     } catch (error) {
       Swal.fire({
         title: "Error!",
@@ -74,7 +77,6 @@ const UserAdd = () => {
         }}
         style={{
           maxWidth: 600,
-          // margin: "0 auto"
         }}
         initialValues={{
           remember: true,
@@ -133,7 +135,7 @@ const UserAdd = () => {
           </Col>
           <Col>
             <Form.Item style={{ display: "flex" }}>
-              <Button type="primary">
+              <Button type="primary" onClick={closeModal}>
                 Quay lại
               </Button>
             </Form.Item>

@@ -1,11 +1,9 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import Swal from "sweetalert2";
-import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ProductApi from "../../api/products";
 
-const ProductsAdd = () => {
-  const navigate = useNavigate();
+const ProductsAdd = ({ closeModal, fetchProducts }) => {
   const [productCode, setProductCode] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -29,7 +27,10 @@ const ProductsAdd = () => {
         text: "Thêm sản phẩm thành công",
         icon: "success",
         confirmButtonText: "OK",
-      }).then(() => navigate("/product"));
+      }).then(() => {
+        closeModal();
+        fetchProducts();
+      });
     } catch (error) {
       Swal.fire({
         title: "Error!",
@@ -68,6 +69,7 @@ const ProductsAdd = () => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
+        layout="vertical"
       >
         <Form.Item
           label="Mã sản phẩm"
@@ -149,8 +151,8 @@ const ProductsAdd = () => {
           </Col>
           <Col>
             <Form.Item style={{ display: "flex" }}>
-              <Button type="primary">
-                <Link to="/product">Quay lại</Link>
+              <Button type="primary" onClick={closeModal}>
+                Quay lại
               </Button>
             </Form.Item>
           </Col>
