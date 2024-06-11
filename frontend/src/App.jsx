@@ -52,6 +52,8 @@ const App = () => {
               <Route path="/user" element={<UserList />} />
               <Route path="/user/add" element={<UserAdd />} />
               <Route path="/user/:id" element={<UserEdit />} />
+              <Route path="/user/changepassword" element={<ChangePassword />} />
+
 
               <Route path="ticket" element={<TicketList />} />
               <Route path="ticket/add" element={<TicketAdd />} />
