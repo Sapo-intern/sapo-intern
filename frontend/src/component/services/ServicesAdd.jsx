@@ -1,11 +1,9 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import Swal from "sweetalert2";
-import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ServiceApi from "../../api/services";
 
-const ServicesAdd = () => {
-  const navigate = useNavigate();
+const ServicesAdd = ({ closeModal, fetchServices }) => {
   const [servicesCode, setServicesCode] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -27,7 +25,10 @@ const ServicesAdd = () => {
         text: "Thêm dịch vụ thành công",
         icon: "success",
         confirmButtonText: "OK",
-      }).then(() => navigate("/services"));
+      }).then(() => {
+        closeModal();
+        fetchServices();
+      });
     } catch (error) {
       Swal.fire({
         title: "Error!",
@@ -66,6 +67,7 @@ const ServicesAdd = () => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
+        layout="vertical"
       >
         <Form.Item
           label="Mã dịch vụ"
@@ -130,8 +132,8 @@ const ServicesAdd = () => {
           </Col>
           <Col>
             <Form.Item style={{ display: "flex" }}>
-              <Button type="primary">
-                <Link to="/service">Quay lại</Link>
+              <Button type="primary" onClick={closeModal}>
+                Quay lại
               </Button>
             </Form.Item>
           </Col>
