@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { useState } from "react";
 import ServiceApi from "../../api/services";
 
-const ServicesAdd = ({ closeModal, fetchServices }) => {
+const ServicesAdd = ({ closeModal, fetchServices, currentPage, pageSize }) => {
   const [servicesCode, setServicesCode] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -27,7 +27,7 @@ const ServicesAdd = ({ closeModal, fetchServices }) => {
         confirmButtonText: "OK",
       }).then(() => {
         closeModal();
-        fetchServices();
+        fetchServices(currentPage, pageSize); 
       });
     } catch (error) {
       Swal.fire({

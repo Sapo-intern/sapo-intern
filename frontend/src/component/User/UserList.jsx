@@ -14,12 +14,10 @@ const getColumns = (handleDelete) => [
   {
     title: "Số điện thoại",
     dataIndex: "phone",
-    sorter: (a, b) => a.age - b.age,
   },
   {
     title: "Age",
     dataIndex: "age",
-    sorter: (a, b) => a.age - b.age,
   },
   {
     title: "Hình ảnh",
@@ -31,19 +29,6 @@ const getColumns = (handleDelete) => [
   {
     title: "Địa chỉ",
     dataIndex: "address",
-    filters: [
-      {
-        text: "London",
-        value: "London",
-      },
-      {
-        text: "New York",
-        value: "New York",
-      },
-    ],
-    onFilter: (value, record) => record.address.startsWith(value),
-    filterSearch: true,
-    // width: "40%",
   },
   {
     title: "Email",
@@ -63,7 +48,6 @@ const getColumns = (handleDelete) => [
       }
       return <Tag color={color}>{role.toUpperCase()}</Tag>;
     },
-    sorter: (a, b) => a.role.localeCompare(b.role),
   },
   {
     title: "Action",
@@ -204,7 +188,12 @@ const UserList = () => {
         onChange={handlePageChange}
       />
       <Modal visible={isModalVisible} onCancel={handleCancel} footer={null}>
-        <UserAdd closeModal={handleCancel} fetchUser={fetchUser} />
+        <UserAdd
+          closeModal={handleCancel}
+          fetchUser={fetchUser}
+          currentPage={currentPage}
+          pageSize={pageSize}
+        />
       </Modal>
     </>
   );

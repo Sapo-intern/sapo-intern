@@ -115,7 +115,7 @@ public class AuthService {
             throw new AppException(ErrorCode.USER_NOT_FOUND);
         }
 
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        if (oldPassword != null && !passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new AppException(ErrorCode.INVALID_PASSWORD);
         }
 

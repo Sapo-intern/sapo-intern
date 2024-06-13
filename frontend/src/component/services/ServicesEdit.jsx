@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { useEffect } from "react";
 import ServiceApi from "../../api/services";
 
-const ServiceEdit = ({ closeModal, fetchServices, serviceId }) => {
+const ServiceEdit = ({ closeModal, fetchServices, serviceId, currentPage, pageSize  }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const ServiceEdit = ({ closeModal, fetchServices, serviceId }) => {
         confirmButtonText: "OK",
       }).then(() => {
         closeModal();
-        fetchServices();
+        fetchServices(currentPage, pageSize); 
       });
     } catch (error) {
       Swal.fire({

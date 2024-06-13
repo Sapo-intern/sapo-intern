@@ -62,36 +62,37 @@ const Layouts = () => {
     };
   }
 
-  const items = user && user.role === "MANAGER"
-    ? [
-        getItem("Trang chủ", "1", <HomeOutlined />, "/"),
-        getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
-        getItem("Nhân viên", "3", <UserOutlined />, "/user"),
-        getItem("Khách hàng", "4", <UsergroupAddOutlined />, "/customers"),
-        getItem("Sản phẩm", "5", <ProductOutlined />, "/product"),
-        getItem("Dịch vụ", "6", <SettingOutlined />, "/services"),
-        getItem(
-          "Thông tin cá nhân",
-          "7",
-          <ProfileOutlined />,
-          user ? `/user/${user.id}` : "/"
-        ),
-        getItem("Đăng xuất", "8", <LogoutOutlined />),
-      ]
-    : [
-        getItem("Trang chủ", "1", <HomeOutlined />, "/"),
-        getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
-        getItem("Vấn đề xe", "3", <ToolOutlined />, "/issue"),
-        getItem("Thống kê doanh thu", "4", <ToolOutlined />, "/transaction"),
-        getItem("Kho sản phẩm", "5", <ToolOutlined />, "/storage"),
-        getItem(
-          "Thông tin cá nhân",
-          "7",
-          <ProfileOutlined />,
-          user ? `/user/${user.id}` : "/"
-        ),
-        getItem("Đăng xuất", "8", <LogoutOutlined />),
-      ];
+  const items =
+    user && user.role === "MANAGER"
+      ? [
+          getItem("Trang chủ", "1", <HomeOutlined />, "/"),
+          getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
+          getItem("Nhân viên", "3", <UserOutlined />, "/user"),
+          getItem("Khách hàng", "4", <UsergroupAddOutlined />, "/customers"),
+          getItem("Sản phẩm", "5", <ProductOutlined />, "/product"),
+          getItem("Dịch vụ", "6", <SettingOutlined />, "/services"),
+          getItem(
+            "Thông tin cá nhân",
+            "7",
+            <ProfileOutlined />,
+            user ? `/user/${user.id}` : "/"
+          ),
+          getItem("Đăng xuất", "8", <LogoutOutlined />),
+        ]
+      : [
+          getItem("Trang chủ", "1", <HomeOutlined />, "/"),
+          getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
+          getItem("Vấn đề xe", "3", <ToolOutlined />, "/issue"),
+          getItem("Thống kê doanh thu", "4", <ToolOutlined />, "/transaction"),
+          getItem("Kho sản phẩm", "5", <ToolOutlined />, "/storage"),
+          getItem(
+            "Thông tin cá nhân",
+            "7",
+            <ProfileOutlined />,
+            user ? `/user/${user.id}` : "/"
+          ),
+          getItem("Đăng xuất", "8", <LogoutOutlined />),
+        ];
 
   const dropdownMenu = (
     <Menu>
@@ -149,12 +150,9 @@ const Layouts = () => {
             paddingRight: 16,
           }}
         >
-          <Dropdown overlay={dropdownMenu} trigger={['click']}>
-          <Space style={{ cursor: "pointer" }}>
-              <Avatar
-              size={50}
-                src={user?.urlImage}
-              />
+          <Dropdown overlay={dropdownMenu} trigger={["click"]}>
+            <Space style={{ cursor: "pointer" }}>
+              <Avatar size={50} src={user?.urlImage} />
               <DownOutlined />
             </Space>
           </Dropdown>
@@ -180,13 +178,7 @@ const Layouts = () => {
             <Outlet />
           </div>
         </Content>
-        <Footer
-          style={{
-            textAlign: "center",
-          }}
-        >
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
+        <Footer></Footer>
       </Layout>
     </Layout>
   );

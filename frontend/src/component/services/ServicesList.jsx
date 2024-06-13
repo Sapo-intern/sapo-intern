@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Row, Space, Table, Input, Pagination, Modal } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 const { Search } = Input;
 import ServiceApi from "../../api/services";
@@ -170,7 +170,12 @@ const ServicesList = () => {
       />
 
       <Modal visible={isModalVisible} onCancel={handleCancel} footer={null}>
-        <ServicesAdd closeModal={handleCancel} fetchServices={fetchServices} />
+        <ServicesAdd
+          closeModal={handleCancel}
+          fetchServices={fetchServices}
+          currentPage={currentPage}
+          pageSize={pageSize}
+        />
       </Modal>
       <Modal
         visible={isEditModalVisible}
@@ -178,7 +183,13 @@ const ServicesList = () => {
         footer={null}
         destroyOnClose={true}
       >
-        <ServiceEdit closeModal={handleCancel} fetchServices={fetchServices} serviceId={currentServicesId} />
+        <ServiceEdit
+          closeModal={handleCancel}
+          fetchServices={fetchServices}
+          currentPage={currentPage}
+          pageSize={pageSize}
+          serviceId={currentServicesId}
+        />
       </Modal>
     </>
   );

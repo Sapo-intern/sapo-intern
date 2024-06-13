@@ -26,7 +26,7 @@ const ChangePasswordUser = () => {
         text: "Đổi mật khẩu thành công",
         icon: "success",
         confirmButtonText: "OK",
-      }).then(() => navigate("/user"));
+      }).then(() => navigate(`/user/${user.id}`));
     } catch (error) {
       Swal.fire({
         title: "Error!",
@@ -67,7 +67,7 @@ const ChangePasswordUser = () => {
 
   return (
     <>
-      <h1 style={{ marginBottom: 16, textAlign: "center" }}>Thêm sản phẩm</h1>
+      <h1 style={{ marginBottom: 16, textAlign: "center" }}>Thay đổi mật khẩu</h1>
 
       <Form
         name="basic"
@@ -130,7 +130,7 @@ const ChangePasswordUser = () => {
 
         <Form.Item style={{ display: "flex", marginRight: 12 }}>
           <Button type="primary" htmlType="submit" onClick={handleSubmit}>
-            Thêm
+            Lưu
           </Button>
         </Form.Item>
       </Form>
