@@ -18,7 +18,6 @@ const ChangePassword = () => {
     try {
        await auth.changePassword({
         email: user.email,
-        oldPassword: data.oldPassword,
         newPassword: data.newPassword,
         confirmNewPassword: data.confirmNewPassword
       });
@@ -57,19 +56,6 @@ const ChangePassword = () => {
                   <h3>Đặt lại mật khẩu</h3>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                  <div className="form-group last ">
-                    <label htmlFor="oldPassword">Mật khẩu cũ</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="oldPassword"
-                      {...register("oldPassword", { required: true })}
-                    />
-                  </div>
-                  {errors.password && (
-                    <span className="error">Hãy nhập mật khẩu của bạn</span>
-                  )}
-
                   <div className="form-group last ">
                     <label htmlFor="newPassword">Mật khẩu mới</label>
                     <input

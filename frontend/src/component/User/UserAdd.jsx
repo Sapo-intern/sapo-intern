@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import auth from "../../api/auth";
 
-const UserAdd = ({ closeModal, fetchUser }) => {
+const UserAdd = ({ closeModal, fetchUser, currentPage, pageSize }) => {
   const [email, setEmail] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [roles, setRoles] = useState([]);
@@ -20,16 +20,17 @@ const UserAdd = ({ closeModal, fetchUser }) => {
     fetchRole();
   }, []);
 
-  const options = roles.map(role => ({
+  const filteredRoles = roles.filter((role) => role !== "MANAGER");
+
+  const options = filteredRoles.map((role) => ({
     value: role,
     label: role,
-    disabled: role === 'MANAGER',
   }));
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-  
+
       await auth.register({
         email,
         role: selectedRole,
@@ -40,9 +41,9 @@ const UserAdd = ({ closeModal, fetchUser }) => {
         text: "Thêm nhân viên thành công",
         icon: "success",
         confirmButtonText: "OK",
-      }).then(()=>{
+      }).then(() => {
         closeModal();
-        fetchUser();
+        fetchUser(currentPage, pageSize);
       });
     } catch (error) {
       Swal.fire({
@@ -84,7 +85,6 @@ const UserAdd = ({ closeModal, fetchUser }) => {
         autoComplete="off"
         layout="vertical"
       >
-
         <Form.Item
           label="Email"
           name="email"
@@ -99,7 +99,7 @@ const UserAdd = ({ closeModal, fetchUser }) => {
             },
           ]}
         >
-          <Input value={email} onChange={(e) => setEmail(e.target.value)}/>
+          <Input value={email} onChange={(e) => setEmail(e.target.value)} />
         </Form.Item>
 
         <Form.Item
@@ -122,7 +122,7 @@ const UserAdd = ({ closeModal, fetchUser }) => {
           />
         </Form.Item>
 
-        <Row >
+        <Row>
           <Col>
             <Form.Item style={{ display: "flex", marginRight: 12 }}>
               <Button type="primary" htmlType="submit" onClick={handleSubmit}>

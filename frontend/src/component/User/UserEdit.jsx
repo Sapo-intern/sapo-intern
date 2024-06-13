@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import UserApi from "../../api/user";
 import Swal from "sweetalert2";
-
 import { Form, Input, Button, Card, Avatar, Row, Col, Upload } from "antd";
 import { UserOutlined, UploadOutlined } from "@ant-design/icons";
 
@@ -12,40 +11,39 @@ const UserEdit = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [file, setFile] = useState(null);
-  const navigate = useNavigate();
+
+  const fetchUser = async () => {
+    try {
+      const response = await UserApi.getOneUser(id);
+      const userData = response.result;
+      setUser(userData);
+
+      if (userData) {
+        form.setFieldsValue({
+          name: userData.name,
+          phone: userData.phone,
+          age: userData.age,
+          address: userData.address,
+          role: userData.role,
+        });
+
+        if (userData.urlImage) {
+          setFileList([
+            {
+              uid: "-1",
+              name: "image.png",
+              status: "done",
+              url: userData.urlImage,
+            },
+          ]);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await UserApi.getOneUser(id);
-        const userData = response.result;
-        setUser(userData);
-
-        if (userData) {
-          form.setFieldsValue({
-            name: userData.name,
-            phone: userData.phone,
-            age: userData.age,
-            address: userData.address,
-            role: userData.role,
-          });
-
-          if (userData.urlImage) {
-            setFileList([
-              {
-                uid: "-1",
-                name: "image.png",
-                status: "done",
-                url: userData.urlImage,
-              },
-            ]);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
     fetchUser();
   }, [id, form]);
 
@@ -77,11 +75,12 @@ const UserEdit = () => {
         text: "Cập nhật thông tin thành công",
         icon: "success",
         confirmButtonText: "OK",
-      }).then(() => navigate("/user"));
+      }).then(() => fetchUser())
+
     } catch (error) {
       Swal.fire({
         title: "Error!",
-        text: "Cập nhật thông tin thất bại!",
+        text: error.response.data.message,
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -97,6 +96,14 @@ const UserEdit = () => {
     if (fileList.length > 0 && fileList[0].originFileObj) {
       setFile(fileList[0].originFileObj);
     }
+  };
+
+  const validatePhoneNumber = (_, value) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    if (value && !phoneRegex.test(value)) {
+      return Promise.reject(new Error("Số điện thoại không hợp lệ!"));
+    }
+    return Promise.resolve();
   };
 
   return (
@@ -125,11 +132,27 @@ const UserEdit = () => {
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
-              <Form.Item label="Tên " name="name">
+              <Form.Item
+                label="Họ và tên "
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập tên của bạn",
+                  },
+                ]}
+              >
                 <Input />
               </Form.Item>
 
-              <Form.Item label="Số điện thoại" name="phone">
+              <Form.Item
+                label="Số điện thoại"
+                name="phone"
+                rules={[
+                  { required: true, message: "Vui lòng nhập số điện thoại!" },
+                  { validator: validatePhoneNumber },
+                ]}
+              >
                 <Input type="number" />
               </Form.Item>
 
