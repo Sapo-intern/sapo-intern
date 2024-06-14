@@ -20,11 +20,15 @@ const UserAdd = ({ closeModal, fetchUser, currentPage, pageSize }) => {
     fetchRole();
   }, []);
 
+  const roleTranslations = {
+    "COORDINATOR": "Nhân viên điều phối",
+    "TECHNICIAN": "Nhân viên sửa chữa",
+  };
   const filteredRoles = roles.filter((role) => role !== "MANAGER");
 
   const options = filteredRoles.map((role) => ({
     value: role,
-    label: role,
+    label: roleTranslations[role] || role, 
   }));
 
   const handleSubmit = async (e) => {

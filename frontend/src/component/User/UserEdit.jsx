@@ -24,7 +24,7 @@ const UserEdit = () => {
           phone: userData.phone,
           age: userData.age,
           address: userData.address,
-          role: userData.role,
+          role: translateRole(userData.role),
         });
 
         if (userData.urlImage) {
@@ -53,7 +53,7 @@ const UserEdit = () => {
     formData.append("phone", values.phone);
     formData.append("age", values.age);
     formData.append("address", values.address);
-    formData.append("role", values.role);
+    formData.append("role", translateRole(values.role));
 
     if (file) {
       formData.append("imageFile", file);
@@ -75,8 +75,7 @@ const UserEdit = () => {
         text: "Cập nhật thông tin thành công",
         icon: "success",
         confirmButtonText: "OK",
-      }).then(() => fetchUser())
-
+      }).then(() => fetchUser());
     } catch (error) {
       Swal.fire({
         title: "Error!",
@@ -106,6 +105,19 @@ const UserEdit = () => {
     return Promise.resolve();
   };
 
+  const translateRole = (role) => {
+    switch (role) {
+      case "MANAGER":
+        return "Nhân viên quản lí";
+      case "COORDINATOR":
+        return "Nhân viên điều phối";
+      case "TECHNICIAN":
+        return "Nhân viên sửa chữa";
+      default:
+        return role;
+    }
+  };
+
   return (
     <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
       <Row gutter={16}>
@@ -120,7 +132,7 @@ const UserEdit = () => {
               </Upload>
             </div>
             <h2>{user?.name}</h2>
-            <p>{user?.role}</p>
+            <p>{translateRole(user?.role)}</p>
           </Card>
         </Col>
         <Col span={16}>
@@ -164,7 +176,7 @@ const UserEdit = () => {
                 <Input />
               </Form.Item>
 
-              <Form.Item label="Nhân viên" name="role">
+              <Form.Item label="Vai trò" name="role">
                 <Input disabled />
               </Form.Item>
 

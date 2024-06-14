@@ -67,31 +67,23 @@ const Layouts = () => {
       ? [
           getItem("Trang chủ", "1", <HomeOutlined />, "/"),
           getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
-          getItem("Nhân viên", "3", <UserOutlined />, "/user"),
-          getItem("Khách hàng", "4", <UsergroupAddOutlined />, "/customers"),
-          getItem("Sản phẩm", "5", <ProductOutlined />, "/product"),
-          getItem("Dịch vụ", "6", <SettingOutlined />, "/services"),
-          getItem(
-            "Thông tin cá nhân",
-            "7",
-            <ProfileOutlined />,
-            user ? `/user/${user.id}` : "/"
-          ),
-          getItem("Đăng xuất", "8", <LogoutOutlined />),
+          getItem("Vấn đề xe", "3", <ToolOutlined />, "/issue"),
+          getItem("Nhân viên", "4", <UserOutlined />, "/user"),
+          getItem("Khách hàng", "5", <UsergroupAddOutlined />, "/customers"),
+          getItem("Kho sản phẩm", "6", <ToolOutlined />, "/storage"),
+          getItem("Sản phẩm", "7", <ProductOutlined />, "/product"),
+          getItem("Dịch vụ", "8", <SettingOutlined />, "/services"),
+        ]
+      : user && user.role === "COORDINATOR"
+      ? [
+          getItem("Trang chủ", "1", <HomeOutlined />, "/"),
+          getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
+          getItem("Vấn đề xe", "3", <ToolOutlined />, "/issue"),
         ]
       : [
           getItem("Trang chủ", "1", <HomeOutlined />, "/"),
           getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
           getItem("Vấn đề xe", "3", <ToolOutlined />, "/issue"),
-          getItem("Thống kê doanh thu", "4", <ToolOutlined />, "/transaction"),
-          getItem("Kho sản phẩm", "5", <ToolOutlined />, "/storage"),
-          getItem(
-            "Thông tin cá nhân",
-            "7",
-            <ProfileOutlined />,
-            user ? `/user/${user.id}` : "/"
-          ),
-          getItem("Đăng xuất", "8", <LogoutOutlined />),
         ];
 
   const dropdownMenu = (
@@ -128,7 +120,7 @@ const Layouts = () => {
             <Menu.Item
               key={item.key}
               icon={item.icon}
-              onClick={item.key === "8" ? handleLogout : undefined}
+              onClick={item.key === "10" ? handleLogout : undefined}
             >
               {item.path ? (
                 <Link to={item.path}>{item.label}</Link>
