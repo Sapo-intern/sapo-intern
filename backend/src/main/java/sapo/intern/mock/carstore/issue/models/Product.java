@@ -41,6 +41,8 @@ public class Product {
                 sumQuantity += trans.getQuantity();
             } else if (trans.getType() == StorageType.SALE) {
                 sumQuantity -= trans.getQuantity();
+            } else if (trans.getType() == StorageType.CANCELED) {
+                sumQuantity += trans.getQuantity();
             }
         }
         return sumQuantity;

@@ -72,7 +72,7 @@ const TicketAdd = () => {
     const fetchServiceResponse = await ServiceApi.getAll(0, 1000);
     const fetchProductResponse = await ProductApi.getAll(0, 1000);
 
-    setEmployees(fetchUsersResponse.content);
+    setEmployees(fetchUsersResponse.content.filter(user => user.role==="TECHNICIAN"));
     setProducts(fetchProductResponse.content);
     setServices(fetchServiceResponse.content);
   };
@@ -134,7 +134,9 @@ const TicketAdd = () => {
       alert("Create success!");
     } catch (err) {
       console.log(err);
-      alert(err);
+      if(err.response.data.code) {
+        alert(err.response.data.message);
+      }
     }
   };
 
@@ -229,12 +231,6 @@ const TicketAdd = () => {
             <Form.Item
               name={["vehicle", "type"]}
               label="Loại xe"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy nhập loại xe!",
-                },
-              ]}
             >
               <Input
                 onChange={(e) => handleFormChange(e.target.value, "type")}
@@ -270,12 +266,7 @@ const TicketAdd = () => {
             <Form.Item
               name={["vehicle", "brand"]}
               label="Nhãn hiệu"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your E-mail!",
-                },
-              ]}
+              
             >
               <Input onChange={(e) => handleFormChange(e, "brand")} />
             </Form.Item>
