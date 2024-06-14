@@ -6,6 +6,12 @@ import UserApi from "../../api/user";
 import Modal from "antd/es/modal/Modal";
 const { Search } = Input;
 import UserAdd from "./UserAdd";
+
+const roleMapping = {
+  TECHNICIAN: "Nhân viên sửa chữa",
+  COORDINATOR: "Nhân viên điều phối",
+  MANAGER: "Nhân viên quản lí"
+};
 const getColumns = (handleDelete) => [
   {
     title: "Tên",
@@ -46,7 +52,7 @@ const getColumns = (handleDelete) => [
       } else {
         color = "blue";
       }
-      return <Tag color={color}>{role.toUpperCase()}</Tag>;
+      return <Tag color={color}>{roleMapping[role] || role.toUpperCase()}</Tag>;
     },
   },
   {
