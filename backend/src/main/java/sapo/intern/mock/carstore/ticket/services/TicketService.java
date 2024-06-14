@@ -7,14 +7,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sapo.intern.mock.carstore.event.ProductStorage;
 import sapo.intern.mock.carstore.event.TicketCompleted;
+import sapo.intern.mock.carstore.global.exceptions.AppException;
+import sapo.intern.mock.carstore.global.exceptions.ErrorCode;
 import sapo.intern.mock.carstore.global.exceptions.NotFoundException;
+import sapo.intern.mock.carstore.issue.dtos.ProductQuantity;
 import sapo.intern.mock.carstore.issue.enums.StorageType;
 import sapo.intern.mock.carstore.issue.helper.IssueProductKey;
 import sapo.intern.mock.carstore.issue.models.Issue;
 import sapo.intern.mock.carstore.issue.models.IssueProduct;
+import sapo.intern.mock.carstore.issue.models.StorageTransaction;
 import sapo.intern.mock.carstore.issue.repositories.IssueRepo;
 import sapo.intern.mock.carstore.issue.repositories.ProductRepo;
 import sapo.intern.mock.carstore.issue.repositories.RepairServiceRepo;
+import sapo.intern.mock.carstore.issue.repositories.StorageRepo;
 import sapo.intern.mock.carstore.ticket.dtos.AddIssueRequest;
 import sapo.intern.mock.carstore.ticket.dtos.CreateTicketRequest;
 import sapo.intern.mock.carstore.ticket.dtos.TicketStatistic;
@@ -28,6 +33,7 @@ import sapo.intern.mock.carstore.user.repositories.UserRepo;
 
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -41,6 +47,7 @@ public class TicketService {
     private final ProductRepo productRepo;
     private final CustomerService customerService;
     private final VehicleRepo vehicleRepo;
+    private final StorageRepo storageRepo;
     private final ApplicationEventPublisher applicationEventPublisher;
 
 
@@ -95,6 +102,7 @@ public class TicketService {
     public Ticket createTicket(CreateTicketRequest request) {
         var foundCustomer = request.getCustomer();
         var foundVehicle = request.getVehicle();
+
         if (foundCustomer.getId() == null) {
             foundCustomer = customerRepo.save(request.getCustomer());
         }
@@ -106,13 +114,17 @@ public class TicketService {
 
         foundCustomer.addTicket(newTicket);
         foundVehicle.addTicket(newTicket);
+
+        HashMap<Long, Integer> productQuantityMap = new HashMap<Long, Integer>();
+
         if (request.getIssueDtos() != null ) {
             for (var issueDto : request.getIssueDtos()) {
 
                 var foundService = serviceRepo.findById(issueDto.getServiceId()).orElseThrow(() -> new NotFoundException("Không tìm thấy dịch vụ!"));
                 var foundProduct = productRepo.findById(issueDto.getProductId()).orElseThrow(() -> new NotFoundException("Không tìm thấy linh kiện!"));
                 var foundEmployee = userRepo.findById(issueDto.getEmployeeId().toString()).orElseThrow(() -> new NotFoundException("Không tìm thấy nhân viên!"));
-                var newIssue = new Issue();
+
+                var newIssue = issueRepo.save(new Issue());
                 var newIssueProduct = new IssueProduct();
 
 
@@ -121,13 +133,26 @@ public class TicketService {
                 newIssueProduct.setIssue(newIssue);
                 newIssue.setUser(foundEmployee);
 
-
                 foundService.addIssue(newIssue);
                 newIssue.addIssueProduct(newIssueProduct);
                 newTicket.addIssue(newIssue);
+                if (productQuantityMap.get(issueDto.getProductId()) != null) {
+                    productQuantityMap.compute(foundProduct.getId(), (k,v) -> v + issueDto.getQuantity());
+                } else {
+                    productQuantityMap.put(issueDto.getProductId(), issueDto.getQuantity());
+                }
+
+
             }
         }
-        return ticketRepo.save(newTicket);
+
+        for (var pq : productQuantityMap.entrySet()) {
+            var foundProduct = productRepo.findById(pq.getKey()).orElseThrow(() -> new NotFoundException("Không tìm thấy linh kiện!"));
+            if (foundProduct.getQuantity() < pq.getValue()) throw new AppException(ErrorCode.NOT_ENOUGH_QUANTITY);
+            applicationEventPublisher.publishEvent(new ProductStorage(foundProduct.getId(), pq.getValue(), StorageType.SALE));
+        }
+
+        return  ticketRepo.save(newTicket);
     }
 
 
@@ -151,11 +176,6 @@ public class TicketService {
         foundTicket.setCompleteDate(new Date(System.currentTimeMillis()));
         var savedTicket = ticketRepo.save(foundTicket);
         applicationEventPublisher.publishEvent(new TicketCompleted(savedTicket.getId()));
-        for (var issue : savedTicket.getIssues()) {
-            for (var issueProduct : issue.getIssueProducts()) {
-                applicationEventPublisher.publishEvent(new ProductStorage(issueProduct.getId().getProductId(), issueProduct.getQuantity(), StorageType.SALE));
-            }
-        }
         return savedTicket;
     }
 

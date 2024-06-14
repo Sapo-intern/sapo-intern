@@ -24,6 +24,7 @@ public enum ErrorCode {
     SERVICES_EXISTED(1013, "Dịch vụ đã có", HttpStatus.BAD_REQUEST),
     TICKET_NOT_FOUND(1040, "Không tồn tại phiếu sửa chữa", HttpStatus.NOT_FOUND),
     INVALID_REQUEST(1051, "Yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
+    NOT_ENOUGH_QUANTITY(1050,"Số lượng hàng hóa trong kho kho đủ", HttpStatus.BAD_REQUEST)
     ;
 
     private int code;
