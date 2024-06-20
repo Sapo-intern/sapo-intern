@@ -36,7 +36,12 @@ const App = () => {
 
           <Route element={<PrivateRouter />}>
             <Route element={<Layouts />}>
-              <Route path="/" element={<Home />} />
+
+              <Route element={<PrivateRouter requiredRole="MANAGER" />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/user" element={<UserList />} />
+                <Route path="/storage" element={<ProductStatisticScreen />} />
+              </Route>
 
               <Route path="/product" element={<ProductList />} />
               <Route path="/product/:id" element={<ProductEdit />} />
@@ -44,10 +49,11 @@ const App = () => {
               <Route path="/services" element={<ServicesList />} />
               <Route path="/services/:id" element={<ServicesEdit />} />
 
-              <Route path="/user" element={<UserList />} />
               <Route path="/user/:id" element={<UserEdit />} />
-              <Route path="/user/changepassword" element={<ChangePasswordUser />} />
-
+              <Route
+                path="/user/changepassword"
+                element={<ChangePasswordUser />}
+              />
 
               <Route path="ticket" element={<TicketList />} />
               <Route path="ticket/add" element={<TicketAdd />} />
@@ -62,7 +68,6 @@ const App = () => {
               <Route path="/issue" element={<ListIssueScreen />} />
               <Route path="/issue/:id" element={<DetailIssueScreen />} />
 
-              <Route path="/storage" element={<ProductStatisticScreen />} />
             </Route>
           </Route>
           <Route path="/error" element={<NotFound />} />
