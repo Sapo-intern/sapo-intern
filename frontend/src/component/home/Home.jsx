@@ -1,23 +1,13 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  } from "recharts";
-  import "./home.css";
-  import { useEffect, useState } from "react";
-  import StatisticApi from "../../api/statistic";
-  import { BsPeopleFill, BsTicketPerforated } from "react-icons/bs";
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import { useEffect, useState } from "react";
+import StatisticApi from "../../api/statistic";
+import { BsPeopleFill, BsTicketPerforated } from "react-icons/bs";
 import { BiMoneyWithdraw } from "react-icons/bi";
 import { AiOutlineProduct } from "react-icons/ai";
 import { MdMiscellaneousServices } from "react-icons/md";
 import { format, subDays } from 'date-fns';
-
+import "./home.css";
 
 const Home = () => {
   const [tickets, setTickets] = useState([]);
@@ -82,12 +72,56 @@ const Home = () => {
     return `${day}-${month}`;
   };
 
+  const transactionsOptions = {
+    chart: {
+      type: 'area'
+    },
+    title: {
+      text: 'Doanh thu trong một tuần'
+    },
+    xAxis: {
+      categories: transactions.map(item => item.name)
+    },
+    yAxis: {
+      title: {
+        text: 'Tiền'
+      }
+    },
+    series: [{
+      name: 'Doanh thu',
+      data: transactions.map(item => item.uv)
+    }],
+    credits: {
+      enabled: false,
+    }
+  };
+
+  const ticketsOptions = {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: "Số lượng phiếu sửa chữa trong ngày"
+    },
+    xAxis: {
+      categories: tickets.map(item => item.name)
+    },
+    yAxis: {
+      title: {
+        text: 'Số lượng'
+      }
+    },
+    series: [{
+      name: 'Phiếu sửa chữa',
+      data: tickets.map(item => item.count)
+    }],
+    credits: {
+      enabled: false,
+    }
+  };
+
   return (
     <main className="main-container">
-      {/* <div className="main-title">
-        <h3>DASHBOARD</h3>
-      </div> */}
-
       <div className="main-cards">
         <div className="card">
           <div className="card-inner">
@@ -113,7 +147,7 @@ const Home = () => {
         <div className="card">
           <div className="card-inner">
             <h3>Sản phẩm</h3>
-            <AiOutlineProduct unt className="card_icon" />
+            <AiOutlineProduct className="card_icon" />
           </div>
           <h1>{products}</h1>
         </div>
@@ -128,60 +162,17 @@ const Home = () => {
 
       <div className="charts">
         <div className="charts-item">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              width={500}
-              height={400}
-              data={transactions}
-              margin={{
-                top: 10,
-                right: 30,
-                left: 0,
-                bottom: 0,
-              }}
-            >
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Area
-                type="monotone"
-                dataKey="uv"
-                stroke="#8884d8"
-                fill="#8884d8"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={transactionsOptions}
+          />
         </div>
 
         <div className="charts-item">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              width={500}
-              height={300}
-              data={tickets}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-              barSize={20}
-            >
-              <XAxis
-                dataKey="name"
-                scale="point"
-                padding={{ left: 10, right: 10 }}
-              />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="count"
-                fill="#8884d8"
-                background={{ fill: "#eee" }}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={ticketsOptions}
+          />
         </div>
       </div>
     </main>

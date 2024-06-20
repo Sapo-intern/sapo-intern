@@ -9,7 +9,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [user, setUser] = useState(null);
-  // const [role, setRole] = useState('user');
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleLoginSuccess = (newToken, newUser) => {
     setToken(newToken);
@@ -62,6 +62,7 @@ export const AuthProvider = ({ children }) => {
         return () => clearTimeout(timeoutId);
       }
     }
+    setIsLoading(false);
   }, [token]);
 
   useEffect(() => {
@@ -74,18 +75,20 @@ export const AuthProvider = ({ children }) => {
         console.error("Lỗi khi parse dữ liệu từ localStorage:", error);
       }
     }
+    setIsLoading(false);
   }, []);
 
   const contextValue = {
     token,
     user,
-    // role,
     isLoggedIn: !!token,
     onLoginSuccess: handleLoginSuccess,
     onLogout: logout,
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>
+      {!isLoading && children}
+    </AuthContext.Provider>
   );
 };

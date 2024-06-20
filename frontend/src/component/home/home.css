@@ -79,7 +79,11 @@
   height: 300px;
 }
 
-.charts-item:first-child {
+::-webkit-scrollbar {
+    display: none;
+}
+
+.charts-item {
   background-color: #ccc;
   border: 1px solid #ccc;
   border-radius: 5px;
