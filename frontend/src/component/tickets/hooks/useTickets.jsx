@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { TicketApi } from "../../../api/ticket";
-import translateRole from '../../../assets/js/translateRole';
+import translateRole from "../../../assets/js/translateRole";
+// Helper function to transform date format
+const transformDate = (dateString) => {
+  if (!dateString) return ''; 
+  const [year, month, day] = dateString.split("-");
+  return `${day}-${month}-${year}`;
+};
 
 export const useTickets = (page = 0, size = 1000) => {
   const [tickets, setTickets] = useState([]);
@@ -9,11 +15,13 @@ export const useTickets = (page = 0, size = 1000) => {
     const fetchTickets = async () => {
       try {
         const { data } = await TicketApi.getAll(page, size);
-        const transformedData = data.map(ticket => {
-          const {status, ...rest } = ticket;
+        const transformedData = data.map((ticket) => {
+          const { status, createdDate, completeDate, ...rest } = ticket;
           return {
             ...rest,
-            status: translateRole[status] || status
+            status: translateRole[status] || status,
+            createdDate: transformDate(createdDate),
+            completeDate: transformDate(completeDate),
           };
         });
         setTickets(transformedData);
@@ -27,10 +35,12 @@ export const useTickets = (page = 0, size = 1000) => {
   const cancleTicket = async (ticketId) => {
     try {
       const { data: canceledTicket } = await TicketApi.cancle(ticketId);
-      const {status, ...rest } = canceledTicket;
+      const { status, createdDate, completeDate, ...rest } = canceledTicket;
       const transformedTicket = {
         ...rest,
-        status: translateRole[status] || status 
+        status: translateRole[status] || status,
+        createdDate: transformDate(createdDate),
+        completeDate: transformDate(completeDate),
       };
       setTickets((prevTickets) =>
         prevTickets.map((prevTicket) =>
@@ -47,10 +57,12 @@ export const useTickets = (page = 0, size = 1000) => {
   const completeTicket = async (ticketId) => {
     try {
       const { data: completedTicket } = await TicketApi.complete(ticketId);
-      const {status, ...rest } = completedTicket;
+      const { status, createdDate, completeDate, ...rest } = completedTicket;
       const transformedTicket = {
         ...rest,
-        status: translateRole[status] || status
+        status: translateRole[status] || status,
+        createdDate: transformDate(createdDate),
+        completeDate: transformDate(completeDate),
       };
       setTickets((prevTickets) =>
         prevTickets.map((prevTicket) =>
