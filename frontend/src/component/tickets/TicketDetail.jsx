@@ -12,6 +12,8 @@ import { VehicleApi } from "../../api/vehicle";
 import IssueAddDialog from "./components/IssueAddDialog";
 import { issueApi } from "../../api/issue";
 import translateRole from "../../assets/js/translateRole";
+import Swal from "sweetalert2";
+
 
 const TicketDetail = () => {
   const { id } = useParams();
@@ -217,9 +219,19 @@ const TicketDetail = () => {
         ...prevTicket,
         customer: newCustomer,
       }));
-      alert("Update customer successfuly");
+      Swal.fire({
+        title: "Success!",
+        text: "Cập nhật khách hàng thành công",
+        icon: "success",
+        confirmButtonText: "OK",
+      })
     } catch (err) {
-      alert("Error when update customer!");
+      Swal.fire({
+        title: "Error!",
+        text: "Cập nhật khách hàng thất bại!",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -234,9 +246,19 @@ const TicketDetail = () => {
         ...prevTicket,
         vehicle: newVehicle,
       }));
-      alert("Update vehicle success!");
+      Swal.fire({
+        title: "Success!",
+        text: "Cập nhật phương tiện thành công",
+        icon: "success",
+        confirmButtonText: "OK",
+      })
     } catch (err) {
-      alert("Error when update vehicle!");
+      Swal.fire({
+        title: "Error!",
+        text: "Cập nhật phương tiện thất bại!",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -270,9 +292,19 @@ const TicketDetail = () => {
           issue.id === issueId ? newIssue : issue
         ),
       }));
-      alert("Update issue successfully");
+      Swal.fire({
+        title: "Success!",
+        text: "Cập nhật vấn đề phương tiện thành công",
+        icon: "success",
+        confirmButtonText: "OK",
+      })
     } catch (err) {
-      alert("Update issue failed");
+      Swal.fire({
+        title: "Error!",
+        text: "Cập nhật vấn đề phương tiện thất bại!",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 

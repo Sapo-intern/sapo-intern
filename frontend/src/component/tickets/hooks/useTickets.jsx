@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { TicketApi } from "../../../api/ticket";
 import translateRole from "../../../assets/js/translateRole";
-// Helper function to transform date format
+import Swal from "sweetalert2";
+
 const transformDate = (dateString) => {
   if (!dateString) return ''; 
   const [year, month, day] = dateString.split("-");
@@ -47,10 +48,19 @@ export const useTickets = (page = 0, size = 1000) => {
           prevTicket.id === ticketId ? transformedTicket : prevTicket
         )
       );
-      alert("Update ticket successfully!");
+      Swal.fire({
+        title: "Success!",
+        text: "Cập nhật phiếu sữa xe thành công",
+        icon: "success",
+        confirmButtonText: "OK",
+      })
     } catch (err) {
-      console.log(err);
-      alert("Update ticket failed!");
+      Swal.fire({
+        title: "Error!",
+        text: "Cập nhật phiếu sữa xe thất bại!",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -69,10 +79,19 @@ export const useTickets = (page = 0, size = 1000) => {
           prevTicket.id === ticketId ? transformedTicket : prevTicket
         )
       );
-      alert("Update ticket successfully!");
+      Swal.fire({
+        title: "Success!",
+        text: "Cập nhật phiếu sữa xe thành công",
+        icon: "success",
+        confirmButtonText: "OK",
+      })
     } catch (err) {
-      console.log(err);
-      alert("Update ticket failed!");
+      Swal.fire({
+        title: "Error!",
+        text: "Cập nhật phiếu sữa xe thất bại!",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 

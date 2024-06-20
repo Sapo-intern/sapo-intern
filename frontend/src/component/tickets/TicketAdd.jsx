@@ -1,25 +1,22 @@
 import {
   Button,
   Card,
-  Checkbox,
   Col,
-  Flex,
   Form,
   Input,
   Row,
   Select,
-  Space,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CloseCircleFilled, PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import UserApi from "../../api/user";
 import { CustomerApi } from "../../api/customer";
 import { ServiceApi } from "../../api/service";
 import { ProductApi } from "../../api/product";
-import instance from "../../api/instance";
 import { TicketApi } from "../../api/ticket";
 import { VehicleApi } from "../../api/vehicle";
+import Swal from "sweetalert2";
 
 const TicketAdd = () => {
   const formItemLayout = {
@@ -62,7 +59,6 @@ const TicketAdd = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
   };
@@ -131,12 +127,20 @@ const TicketAdd = () => {
       await TicketApi.createTicket(customer, vehicle, issues);
       console.log(Object.keys(form.getFieldsValue()));
       form.resetFields(Object.keys(form.getFieldsValue()));
-      alert("Create success!");
-    } catch (err) {
-      console.log(err);
-      if(err.response.data.code) {
-        alert(err.response.data.message);
-      }
+
+      Swal.fire({
+        title: "Success!",
+        text: "Thêm phiếu sửa xe thành công",
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => navigate("/ticket"));
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: error.response.data.message,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -279,7 +283,7 @@ const TicketAdd = () => {
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
-                <Card style={{ margin: "1rem 0 1rem 0" }}>
+                <Card key={key} style={{ margin: "1rem 0 1rem 0" }}>
                   <CloseCircleFilled
                     style={{
                       position: "absolute",
@@ -419,7 +423,7 @@ const TicketAdd = () => {
               <Button
                 type="primary"
                 htmlType="button"
-                onClick={(e) => navigate("/ticket")}
+                onClick={() => navigate("/ticket")}
               >
                 Quay lại
               </Button>
