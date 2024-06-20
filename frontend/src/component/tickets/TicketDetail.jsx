@@ -1,6 +1,6 @@
 import { Button, Card, Col, Flex, Input, Row, Select } from "antd";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TicketApi } from "../../api/ticket";
 import { BiUser } from "react-icons/bi";
 import { IoCarOutline, IoWarning } from "react-icons/io5";
@@ -11,6 +11,7 @@ import { CustomerApi } from "../../api/customer";
 import { VehicleApi } from "../../api/vehicle";
 import IssueAddDialog from "./components/IssueAddDialog";
 import { issueApi } from "../../api/issue";
+import translateRole from "../../assets/js/translateRole";
 
 const TicketDetail = () => {
   const { id } = useParams();
@@ -254,7 +255,6 @@ const TicketDetail = () => {
     quantity,
     issueProductId
   ) => {
-    console.log(issueProductId)
     try {
       const { data: newIssue } = await issueApi.updateIssue(
         issueId,
@@ -283,7 +283,9 @@ const TicketDetail = () => {
       <h4>Thông tin phiếu sửa chữa</h4>
       <Row>
         <Col span={8}>Mã phiếu: {ticket.id}</Col>
-        <Col span={8}>Trạng thái: {ticket.status}</Col>
+        <Col span={8}>
+          Trạng thái: {translateRole[ticket.status] || ticket.status}
+        </Col>
         <Col span={8}>Tổng tiền: {ticket.totalAmount} VNĐ</Col>
       </Row>
       <Flex horizontal="true" align="center" gap={"small"}>
@@ -413,7 +415,9 @@ const TicketDetail = () => {
               </Col>
             </Row>
             <Row>
-              <Col span={8}>Trạng thái vấn đề: {issue.status}</Col>
+              <Col span={8}>
+                Trạng thái vấn đề: {translateRole[issue.status] || issue.status}
+              </Col>
             </Row>
             <Row>
               <Col span={8}>Tổng tiền: {issue.totalAmount}</Col>
@@ -484,8 +488,7 @@ const TicketDetail = () => {
                   </Row>
                   <Row style={{ marginTop: 15 }}>
                     <Button
-                      onClick={(e) => {
-                        console.log(issueProductId);
+                      onClick={() => {
                         updateIssue(
                           issue.id,
                           issue.repairService.id,

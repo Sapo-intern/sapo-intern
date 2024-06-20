@@ -1,7 +1,7 @@
-import { Button, Card, Col, Divider, Flex, Progress, Row, Slider } from "antd";
-import React from "react";
+import { Button, Card, Col, Divider, Flex, Row, Slider } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useIssueDetail } from "./useIssueDetail";
+import translateRole from "../../assets/js/translateRole";
 
 const DetailIssueScreen = () => {
   const { id } = useParams();
@@ -16,7 +16,7 @@ const DetailIssueScreen = () => {
       <Flex gap={"small"} vertical>
         <Card title={`Mã vấn đề: ${issue.id}`}>
           <p>Miêu tả: {issue.description}</p>
-          <p>Trạng thái: {issue.status}</p>
+          <p>Trạng thái: {translateRole[issue.status] || issue.status}</p>
           <Flex gap="middle" align="center">
             <p>Tình trạng:</p>
             <Slider

@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
 import { Button, Col, Row, Table } from "antd";
 import Search from "antd/es/transfer/search";
 import { Link } from "react-router-dom";
 import { useTicketColumns } from "./table/useTicketColumns";
-import { TicketApi } from "../../api/ticket";
 import { useTickets } from "./hooks/useTickets";
 
 const TicketList = () => {
@@ -19,7 +17,6 @@ const TicketList = () => {
             allowClear
             enterButton="Tìm kiếm"
             size="large"
-            // onSearch={onSearch}
           />
         </Col>
         <Col

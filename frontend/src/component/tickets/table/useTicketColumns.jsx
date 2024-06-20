@@ -28,28 +28,23 @@ export const useTicketColumns = (cancleTicket, completeTicket) => {
       title: "Trạng thái",
       dataIndex: "status",
     },
-    // {
-    //   title: "Số lượng vấn đề",
-    //   dataIndex: "status",
-    // },
     {
-      title: "Action",
+      title: "",
       key: "action",
       render: (option) => (
         <Space size="middle">
           <Button
             onClick={() => {
-              console.log(option);
               navigate(`/ticket/${option.id}`);
             }}
             type="primary"
           >
             Xem chi tiết
           </Button>
-          <Button disabled={option.status === 'CANCELED' || option.status === 'PAID'}  onClick={() => cancleTicket(option.id)} danger>
+          <Button disabled={option.status === 'Đã hủy' || option.status === 'Đã thanh toán'}  onClick={() => cancleTicket(option.id)} danger>
             Hủy
           </Button>
-          <Button disabled={option.status !== 'COMPLETE'} onClick={() => completeTicket(option.id)}>Thanh toán</Button>
+          <Button disabled={option.status !== 'Đã hoàn thành'} onClick={() => completeTicket(option.id)}>Thanh toán</Button>
         </Space>
       ),
     },
