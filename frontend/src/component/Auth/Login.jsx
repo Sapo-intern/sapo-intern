@@ -12,21 +12,39 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-    
       const response = await auth.login({
         email: data.email,
         password: data.password,
       });
 
       // onLoginSuccess(response.result.token,response.result.refreshToken,response.result);
-      onLoginSuccess(response.result.token,response.result);
-
+      onLoginSuccess(response.result.token, response.result);
+  
       Swal.fire({
         title: "Success!",
         text: "Đăng nhập thành công",
         icon: "success",
         confirmButtonText: "OK",
-      }).then(() => navigate(response.result.firstLogin === true ? "/changepassword" : "/"));
+      }).then(() => {
+        if (response.result.firstLogin === true) {
+          navigate("/changepassword");
+        } else {
+          switch (response.result.role) {
+            case "MANAGER":
+              navigate("/");
+              break;
+            case "COORDINATOR":
+              navigate("/ticket");
+              break;
+            case "TECHNICIAN":
+              navigate("/issue");
+              break;
+            default:
+              navigate("/error");
+              break;
+          }
+        }
+      });
     } catch (error) {
       Swal.fire({
         title: "Error!",
