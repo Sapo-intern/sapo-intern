@@ -4,6 +4,7 @@ import UserApi from "../../api/user";
 import Swal from "sweetalert2";
 import { Form, Input, Button, Card, Avatar, Row, Col, Upload } from "antd";
 import { UserOutlined, UploadOutlined } from "@ant-design/icons";
+import translateRole from "../../assets/js/translateRole";
 
 const UserEdit = () => {
   const [user, setUser] = useState(null);
@@ -24,7 +25,7 @@ const UserEdit = () => {
           phone: userData.phone,
           age: userData.age,
           address: userData.address,
-          role: translateRole(userData.role),
+          role: translateRole[userData.role] || userData.role,
         });
 
         if (userData.urlImage) {
@@ -53,7 +54,12 @@ const UserEdit = () => {
     formData.append("phone", values.phone);
     formData.append("age", values.age);
     formData.append("address", values.address);
-    formData.append("role", translateRole(values.role));
+    formData.append(
+      "role",
+      Object.keys(translateRole).find(
+        (key) => translateRole[key] === values.role
+      ) || values.role
+    );
 
     if (file) {
       formData.append("imageFile", file);
@@ -105,19 +111,6 @@ const UserEdit = () => {
     return Promise.resolve();
   };
 
-  const translateRole = (role) => {
-    switch (role) {
-      case "MANAGER":
-        return "Nhân viên quản lí";
-      case "COORDINATOR":
-        return "Nhân viên điều phối";
-      case "TECHNICIAN":
-        return "Nhân viên sửa chữa";
-      default:
-        return role;
-    }
-  };
-
   return (
     <div style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
       <Row gutter={16}>
@@ -132,20 +125,20 @@ const UserEdit = () => {
               </Upload>
             </div>
             <h2>{user?.name}</h2>
-            <p>{translateRole(user?.role)}</p>
+            <p>{translateRole[user?.role] || user?.role}</p>
           </Card>
         </Col>
         <Col span={16}>
           <Card title="Thông tin cá nhân">
             <Form
-              layout="vertical "
+              layout="vertical"
               form={form}
               onFinish={handleSubmit}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
               <Form.Item
-                label="Họ và tên "
+                label="Họ và tên"
                 name="name"
                 rules={[
                   {

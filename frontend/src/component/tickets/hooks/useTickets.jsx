@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { TicketApi } from "../../../api/ticket";
+import translateRole from '../../../assets/js/translateRole';
 
 export const useTickets = (page = 0, size = 1000) => {
   const [tickets, setTickets] = useState([]);
@@ -8,11 +9,14 @@ export const useTickets = (page = 0, size = 1000) => {
     const fetchTickets = async () => {
       try {
         const { data } = await TicketApi.getAll(page, size);
-        for (const ticket of data) {
-          delete ticket.issues;
-          delete ticket.customer;
-        }
-        setTickets(data);
+        const transformedData = data.map(ticket => {
+          const {status, ...rest } = ticket;
+          return {
+            ...rest,
+            status: translateRole[status] || status
+          };
+        });
+        setTickets(transformedData);
       } catch (err) {
         console.log(err);
       }
@@ -23,11 +27,14 @@ export const useTickets = (page = 0, size = 1000) => {
   const cancleTicket = async (ticketId) => {
     try {
       const { data: canceledTicket } = await TicketApi.cancle(ticketId);
-      delete canceledTicket.issues;
-      delete canceledTicket.customer;
+      const {status, ...rest } = canceledTicket;
+      const transformedTicket = {
+        ...rest,
+        status: translateRole[status] || status 
+      };
       setTickets((prevTickets) =>
         prevTickets.map((prevTicket) =>
-          prevTicket.id === ticketId ? canceledTicket : prevTicket
+          prevTicket.id === ticketId ? transformedTicket : prevTicket
         )
       );
       alert("Update ticket successfully!");
@@ -40,11 +47,14 @@ export const useTickets = (page = 0, size = 1000) => {
   const completeTicket = async (ticketId) => {
     try {
       const { data: completedTicket } = await TicketApi.complete(ticketId);
-      delete completedTicket.issues;
-      delete completedTicket.customer;
+      const {status, ...rest } = completedTicket;
+      const transformedTicket = {
+        ...rest,
+        status: translateRole[status] || status
+      };
       setTickets((prevTickets) =>
         prevTickets.map((prevTicket) =>
-          prevTicket.id === ticketId ? completedTicket : prevTicket
+          prevTicket.id === ticketId ? transformedTicket : prevTicket
         )
       );
       alert("Update ticket successfully!");

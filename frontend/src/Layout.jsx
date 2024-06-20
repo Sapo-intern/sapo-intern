@@ -76,13 +76,11 @@ const Layouts = () => {
         ]
       : user && user.role === "COORDINATOR"
       ? [
-          getItem("Trang chủ", "1", <HomeOutlined />, "/"),
           getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
-          getItem("Vấn đề xe", "3", <ToolOutlined />, "/issue"),
+          getItem("Sản phẩm", "7", <ProductOutlined />, "/product"),
+          getItem("Dịch vụ", "8", <SettingOutlined />, "/services"),
         ]
       : [
-          getItem("Trang chủ", "1", <HomeOutlined />, "/"),
-          getItem("Phiếu sửa chữa", "2", <ToolOutlined />, "/ticket"),
           getItem("Vấn đề xe", "3", <ToolOutlined />, "/issue"),
         ];
 
