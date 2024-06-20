@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { StorageApi } from "../../api/storage";
+import Swal from "sweetalert2";
 
 export const useStorages = () => {
   const [storages, setStorages] = useState([]);
@@ -14,20 +15,33 @@ export const useStorages = () => {
   }, []);
 
   const saveStorage = async (productId, quantity) => {
-    const { data } = await StorageApi.saveStorage(productId, quantity);
-    console.log(data);
-    setStorages((prevStorage) =>
-      prevStorage.map((s) =>
-        s.productId === productId
-          ? { ...s, totalQuantity: s.totalQuantity + Number(quantity), importQuantity: 0 }
-          : s
+    try {
+      await StorageApi.saveStorage(productId, quantity);
+      setStorages((prevStorage) =>
+        prevStorage.map((s) =>
+          s.productId === productId
+            ? { ...s, totalQuantity: s.totalQuantity + Number(quantity), importQuantity: 0 }
+            : s
+        )
       )
-    );
-    alert("Nhập số lượng sản phẩm thành công!");
+
+      Swal.fire({
+        title: "Success!",
+        text: "Thêm số lượng sản phẩm thành công",
+        icon: "success",
+        confirmButtonText: "OK",
+      })
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: "Thêm số lượng sản phẩm thất bại!",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
   };
 
   const setStorageQuantity = (productId, quantity) => {
-    console.log(productId, quantity);
     setStorages((st) =>
       st.map((p) => {
         return p.productId === productId
