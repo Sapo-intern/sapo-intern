@@ -2,7 +2,10 @@ package sapo.intern.mock.carstore.ticket.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sapo.intern.mock.carstore.event.ProductStorage;
@@ -10,12 +13,10 @@ import sapo.intern.mock.carstore.event.TicketCompleted;
 import sapo.intern.mock.carstore.global.exceptions.AppException;
 import sapo.intern.mock.carstore.global.exceptions.ErrorCode;
 import sapo.intern.mock.carstore.global.exceptions.NotFoundException;
-import sapo.intern.mock.carstore.issue.dtos.ProductQuantity;
 import sapo.intern.mock.carstore.issue.enums.StorageType;
 import sapo.intern.mock.carstore.issue.helper.IssueProductKey;
 import sapo.intern.mock.carstore.issue.models.Issue;
 import sapo.intern.mock.carstore.issue.models.IssueProduct;
-import sapo.intern.mock.carstore.issue.models.StorageTransaction;
 import sapo.intern.mock.carstore.issue.repositories.IssueRepo;
 import sapo.intern.mock.carstore.issue.repositories.ProductRepo;
 import sapo.intern.mock.carstore.issue.repositories.RepairServiceRepo;
@@ -50,9 +51,9 @@ public class TicketService {
     private final StorageRepo storageRepo;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-
-    public List<Ticket> getTicketList(Integer page, Integer size) {
-        return ticketRepo.findAll(PageRequest.of(page, size)).stream().toList();
+    public Page<Ticket> getTicketList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return ticketRepo.findAll(pageable);
     }
 
     public Issue addIssue(Long ticketId, AddIssueRequest request) {
