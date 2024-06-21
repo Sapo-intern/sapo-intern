@@ -75,7 +75,7 @@ public class Services {
 
 
     public Page<RepairService> getAllServicesPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return serviceRepo.findAll(pageable);
     }
 

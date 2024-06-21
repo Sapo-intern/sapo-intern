@@ -1,7 +1,5 @@
 package sapo.intern.mock.carstore.ticket.models;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +10,7 @@ import sapo.intern.mock.carstore.issue.models.Issue;
 import sapo.intern.mock.carstore.ticket.enums.TicketStatus;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +40,13 @@ public class Ticket {
     @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id")
     private Vehicle vehicle;
 
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 
     public void addIssue(Issue issue) {
         issues.add(issue);

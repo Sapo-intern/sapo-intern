@@ -7,6 +7,8 @@ import lombok.experimental.FieldDefaults;
 import sapo.intern.mock.carstore.issue.enums.StorageType;
 import sapo.intern.mock.carstore.ticket.models.Ticket;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name="products")
@@ -29,12 +31,23 @@ public class Product {
     private Double unitPrice;
     @JsonIgnore
     @OneToMany(mappedBy = "product")
-    private List<StorageTransaction> transactions;
+    private List<StorageTransaction> transactions = new ArrayList<>();
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<IssueProduct> issueProducts;
 
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
     public int getQuantity() {
+        if (transactions == null) {
+            return 0;
+        }
         var sumQuantity = 0;
         for (var trans : transactions) {
             if (trans.getType() == StorageType.IMPORT) {

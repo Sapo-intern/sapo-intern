@@ -1,10 +1,9 @@
 package sapo.intern.mock.carstore.issue.controllers;
 
 import lombok.AllArgsConstructor;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import sapo.intern.mock.carstore.event.TicketCreated;
 import sapo.intern.mock.carstore.global.response.ApiResponse;
 import sapo.intern.mock.carstore.issue.dtos.ProductQuantity;
 import sapo.intern.mock.carstore.issue.dtos.StorageDto;
@@ -15,6 +14,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
+@PreAuthorize("hasAuthority('MANAGER')")
 @RequestMapping("/storages")
 public class StorageController {
 

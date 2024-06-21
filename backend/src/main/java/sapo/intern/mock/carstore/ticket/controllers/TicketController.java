@@ -1,10 +1,13 @@
 package sapo.intern.mock.carstore.ticket.controllers;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sapo.intern.mock.carstore.global.response.ApiResponse;
 import sapo.intern.mock.carstore.issue.models.Issue;
+import sapo.intern.mock.carstore.issue.models.Product;
 import sapo.intern.mock.carstore.ticket.dtos.AddIssueRequest;
 import sapo.intern.mock.carstore.ticket.dtos.CreateTicketRequest;
 import sapo.intern.mock.carstore.ticket.dtos.UpdateTicketRequest;
@@ -15,14 +18,14 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
+@PreAuthorize("hasAuthority('MANAGER') or hasAuthority('COORDINATOR')")
 @RequestMapping("/tickets")
 public class TicketController {
     private TicketService ticketService;
     @GetMapping("/")
-    public ResponseEntity<ApiResponse<List<Ticket>>> requestGetTickets(
-            @RequestParam("page") Integer page,
-            @RequestParam("size") Integer size) {
-        return ResponseEntity.ok(new ApiResponse<>("1000", ticketService.getTicketList(page, size)));
+    public ResponseEntity<Page<Ticket>> requestGetTickets(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
+        Page<Ticket> ticketPage = ticketService.getTicketList(page, size);
+        return ResponseEntity.ok(ticketPage);
     }
 
     @GetMapping("/{ticketId}")

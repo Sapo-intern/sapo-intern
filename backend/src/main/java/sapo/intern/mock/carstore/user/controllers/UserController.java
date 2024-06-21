@@ -17,7 +17,7 @@ import sapo.intern.mock.carstore.user.services.UserService;
 import java.util.List;
 
 @RestController
-//@PreAuthorize("hasAuthority('MANAGER')")
+@PreAuthorize("hasAuthority('MANAGER')")
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-//    @PreAuthorize("permitAll()")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<ApiResponse<User>> getProduct(@PathVariable("userId") String userId) {
         User user = userService.getUser(userId);
 
@@ -43,6 +43,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable String userId,
                                                         @Valid @ModelAttribute UserUpdateRequest request,
                                                         @RequestParam("imageFile") MultipartFile imageFile

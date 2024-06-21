@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sapo.intern.mock.carstore.issue.dtos.ProductCreateRequest;
@@ -15,6 +16,7 @@ import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
 import java.util.List;
 
 @RestController
+@PreAuthorize("hasAuthority('MANAGER')")
 @RequestMapping("/products")
 @Validated
 public class ProductController {

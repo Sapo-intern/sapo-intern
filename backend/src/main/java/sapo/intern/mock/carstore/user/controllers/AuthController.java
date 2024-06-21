@@ -3,6 +3,7 @@ package sapo.intern.mock.carstore.user.controllers;
 import com.nimbusds.jose.JOSEException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sapo.intern.mock.carstore.user.dto.request.*;
 import sapo.intern.mock.carstore.user.dto.response.ApiResponse;
@@ -20,6 +21,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
+    @PreAuthorize("hasAuthority('MANAGER')")
     ApiResponse<User> createUser(@RequestBody @Valid UserCreateRequest request){
         ApiResponse<User> apiResponse = new ApiResponse<>();
         apiResponse.setResult(authService.createUser(request));
